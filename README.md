@@ -2,7 +2,7 @@
 
 ## Microservice architecture diagram
 
-![Microservice architecture](https://imgur.com/a/Hmu0hzJ)
+![Microservice architecture](https://i.imgur.com/oPWEkhd.png)
 
 ## Team 2
 
