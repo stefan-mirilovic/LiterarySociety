@@ -24,3 +24,12 @@ zuul:
     bank:
       path: /bank/**
       service-id: bank
+    paypal:
+      path: /paypal/**
+      service-id: paypal
+    bitcoin:
+      path: /bitcoin/**
+      service-id: bitcoin
+    pcc:
+      path: /pcc/**
+      service-id: pcc
