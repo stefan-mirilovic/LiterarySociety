@@ -1,0 +1,14 @@
+server:
+  port: 8081
+spring:
+  application:
+    name: ${springboot.app.name:payment-concentrator}
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://${REGISTRY_HOST:localhost}:${REGISTRY_PORT:8761}/eureka
+      healthcheck:
+        enabled: true
+  instance:
+    prefer-ip-address: true

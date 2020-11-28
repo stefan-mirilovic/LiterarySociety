@@ -1,0 +1,35 @@
+server:
+  port: 8662
+
+spring:
+  application:
+    name: zuul
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://${REGISTRY_HOST:localhost}:${REGISTRY_PORT:8761}/eureka
+  instance:
+    hostname: localhost
+zuul:
+  host:
+    connect-timeout-millis: 5000000
+    socket-timeout-millis: 5000000
+    max-total-connections: 5000
+    max-per-route-connections: 10000
+  routes:
+    payment-concentrator:
+      path: /payment-concentrator/**
+      service-id: payment-concentrator
+    bank:
+      path: /bank/**
+      service-id: bank
+    paypal:
+      path: /paypal/**
+      service-id: paypal
+    bitcoin:
+      path: /bitcoin/**
+      service-id: bitcoin
+    pcc:
+      path: /pcc/**
+      service-id: pcc
