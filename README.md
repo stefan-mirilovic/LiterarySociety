@@ -1,8 +1,8 @@
 # LiterarySociety
 
-## Microservice architecture diagram
+## System diagram
 
-![Microservice architecture](https://i.imgur.com/oPWEkhd.png)
+![System diagram](https://i.imgur.com/9xWujSv.png)
 
 ## Team 2
 
