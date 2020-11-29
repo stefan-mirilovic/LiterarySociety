@@ -1,4 +1,4 @@
-# LiterarySociety
+# Payment Concentrator
 
 ## System diagram
 
