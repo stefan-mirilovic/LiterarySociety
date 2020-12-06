@@ -3,7 +3,7 @@
 ## System diagram
 
 ![System diagram](https://i.imgur.com/9xWujSv.png)
-
+![Class diagram](https://i.imgur.com/dwUOhQs.jpeg)
 ## Team 2
 
 * [Marko Ercegovac](https://github.com/markoercegovac)
