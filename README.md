@@ -4,6 +4,8 @@
 
 ![System diagram](https://i.imgur.com/9xWujSv.png)
 
+## Class diagram
+
 ![Class diagram](https://i.imgur.com/dwUOhQs.jpeg)
 
 ## Team 2
