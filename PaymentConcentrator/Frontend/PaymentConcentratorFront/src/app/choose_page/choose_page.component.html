@@ -1,0 +1,22 @@
+<html>
+<head> 
+  
+</head>
+<body>
+
+<navigation></navigation>
+
+<div class="row">
+    
+    <div *ngFor="let paymentType of paymentsTypes">
+        <div class="column">
+        <card [paymentType]="paymentType"></card>
+    </div>
+    </div>
+
+</div>
+
+</body>
+
+
+</html>
