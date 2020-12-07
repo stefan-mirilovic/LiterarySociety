@@ -1,0 +1,56 @@
+<html>
+<head>	
+</head>
+<body>
+ <div class="container">
+
+     <header class="heading"> Register</header>
+
+		<div class="row">
+		<table>
+		<tr class="col-sm-12">
+			  <td class="col-xs-4"> <label class="name">Name:</label> </td>
+			 <td class="col-xs-10">		
+			<input type="text" [(ngModel)]="literarySociety.name" name="name" id="fname" placeholder="Enter name" class="form-control ">
+             </td>
+		<tr>
+		
+         <tr class="col-sm-12">
+			     <td class="col-xs-4">
+                     <label class="label">Username :</label></td>
+				<td class ="col-xs-10">	 
+		             <input type="text" [(ngModel)]="literarySociety.username" name="username" id="username" placeholder="Enter username" class="form-control last">
+                </td>
+		   </tr>
+
+         <tr class="col-sm-12">
+            
+                <td class="col-xs-4">
+                    <label class="label">Password :</label></td>
+               <td class ="col-xs-10">	 
+                    <input type="password" [(ngModel)]="literarySociety.password" name="password" id="password" placeholder="Enter password" class="form-control last">
+			   </td>
+        </tr>
+         
+		<tr class="col-sm-12">   
+			     <td class="col-xs-4">
+		             <label class="label" >Email :</label></td>
+			     <td class="col-xs-10"	>	 
+			          <input type="email" [(ngModel)]="literarySociety.email" name="email"  id="email"placeholder="Enter email" class="form-control" >
+				 </td>
+		  
+		 </tr>
+		
+                 			
+		  	
+		    <tr class="col-sm-20">
+		         <td><button class="btn btn-warning sbutton" (click)="onRegister()">Register</button></td>
+			</tr>
+		
+		</table>
+		</div>
+	</div>
+	
+
+</body> 
+</html>
