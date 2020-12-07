@@ -4,6 +4,33 @@ spring:
   application:
     name: ${springboot.app.name:bank}
 
+#Spring DataSource
+  datasource:
+    driverClassName: org.postgresql.Driver
+
+    initialization-mode: always
+    platform: postgres
+    url: jdbc:postgresql://localhost:5432/bank1
+    username: postgres
+    password: admin
+
+  #JPA-Hibernate
+  jpa:
+    show-sql: true
+
+  #kreira tabele na osnovu anotacija @Entity i kada aplikacija zavrsi sa radom dropuje ih
+    hibernate:
+      ddl-auto: create
+
+  #https://stackoverflow.com/questions/43905119/postgres-error-method-org-postgresql-jdbc-pgconnection-createclob-is-not-imple
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+
+  #optimizacija za postgres upite
+        dialect: org.hibernate.dialect.PostgreSQL95Dialect
 eureka:
   client:
     service-url:
