@@ -4,6 +4,25 @@ spring:
   application:
     name: ${springboot.app.name:payment-concentrator}
 
+#DB configuration
+  datasource:
+    password: root
+    platform: postgres
+    url: jdbc:postgresql://localhost:5432/pc
+    username: postgres
+  jpa:
+    database: POSTGRESQL
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+    show-sql: true
+
+#Eureka cloud configuration
 eureka:
   client:
     service-url:
