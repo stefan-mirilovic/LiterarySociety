@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name = "transactions")
+@Table(name = "transaction")
 public class Transaction {
 
     @Id
@@ -25,7 +25,7 @@ public class Transaction {
     @Column
     private TransactionType type;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account", referencedColumnName = "id")
     private Account account;
 }

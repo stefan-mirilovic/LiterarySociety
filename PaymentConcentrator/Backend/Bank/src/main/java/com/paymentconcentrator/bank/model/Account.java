@@ -8,7 +8,7 @@ import java.util.UUID;
 
 @Data
 @Entity
-@Table(name = "accounts")
+@Table(name = "account")
 public class Account {
 
     @Id
@@ -31,7 +31,7 @@ public class Account {
     @Column
     private String merchantPassword;
 
-    @OneToMany(mappedBy = "account", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Card> cards;
 
     @OneToMany(mappedBy = "account", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

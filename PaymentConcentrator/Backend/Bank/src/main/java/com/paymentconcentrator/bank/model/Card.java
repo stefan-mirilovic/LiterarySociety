@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "cards")
+@Table(name = "card")
 public class Card {
 
     @Id
@@ -26,7 +26,7 @@ public class Card {
     @Column
     private String cardHolderName;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account", referencedColumnName = "id")
     private Account account;
 }
