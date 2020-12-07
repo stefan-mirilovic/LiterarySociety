@@ -35,6 +35,6 @@ public class LiterarySociety {
 
 	@ManyToMany
 	@JoinTable(name = "literary_payment", joinColumns = @JoinColumn(name = "payment_id"),inverseJoinColumns = @JoinColumn(name = "literary_id"))
-	List<PaymentType> payments;
+	private List<PaymentType> payments;
 
 }
