@@ -1,10 +1,12 @@
 package com.paymentconcentrator.bank.model;
 
 import com.paymentconcentrator.bank.enumeration.TransactionType;
+import lombok.Data;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@Data
 @Entity
 @Table(name = "transactions")
 public class Transaction {
