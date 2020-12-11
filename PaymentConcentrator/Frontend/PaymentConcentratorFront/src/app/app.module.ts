@@ -9,6 +9,8 @@ import { NavigationComponent } from './navigation/navigation.component';
 import { CardComponent } from './card/card.component';
 import { Choose_pageComponent } from './choose_page/choose_page.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { ChosePaymentComponent } from './chose-payment/chose-payment.component';
+import {HttpClientModule} from "@angular/common/http";
 
 
 @NgModule({
@@ -18,15 +20,17 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     LoginComponent,
     NavigationComponent,
     CardComponent,
-    Choose_pageComponent
+    Choose_pageComponent,
+    ChosePaymentComponent
   ],
   imports: [
     FormsModule,
     ReactiveFormsModule,
     BrowserModule,
     AppRoutingModule,
-    FontAwesomeModule
-    
+    FontAwesomeModule,
+    HttpClientModule
+
   ],
   providers: [],
   bootstrap: [AppComponent]

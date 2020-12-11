@@ -25,9 +25,9 @@ public class Merchant {
 	@Column
 	private String bankUrl;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "literarySociety", referencedColumnName = "id")
-	private LiterarySociety literarySociety;
+	@ManyToMany
+	@JoinTable(name = "merchant_payment", joinColumns = @JoinColumn(name = "payment_id"),inverseJoinColumns = @JoinColumn(name = "merchant_id"))
+	private List<PaymentType> payments;
 
 	@OneToMany(mappedBy = "merchant", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<Transaction> transactions;

@@ -1,17 +1,16 @@
 package com.paymentconcentrator.bank.controller;
 
+import com.paymentconcentrator.bank.dto.BankRequestDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
 public class BankController {
 
-	@GetMapping
-	public ResponseEntity<String> test(){
-		return new ResponseEntity<>("hello from bank", HttpStatus.OK);
+	@PostMapping
+	public void getBank(@RequestBody BankRequestDto bankRequestDto){
+		System.out.println("Hello from bank");
 	}
 }
