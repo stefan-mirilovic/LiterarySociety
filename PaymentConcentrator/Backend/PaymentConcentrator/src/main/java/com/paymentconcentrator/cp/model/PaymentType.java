@@ -22,5 +22,5 @@ public class PaymentType {
 	private String url;
 
 	@ManyToMany(mappedBy = "payments")
-	private List<Merchant> merchantList;
+	private List<Merchant> merchants;
 }

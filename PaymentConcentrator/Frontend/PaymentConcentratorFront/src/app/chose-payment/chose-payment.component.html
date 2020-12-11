@@ -1,0 +1,66 @@
+
+<html>
+<head>
+</head>
+
+<body>
+  <div class="container">
+    <div  class="container h-100 d-flex justify-content-center">
+      <div class="jumbotron my-auto">
+        <table>
+          <tr>
+            <td>
+              <label>MerchantId:</label>
+              {{order.merchantId}}
+            </td>
+          <tr>
+            <td>
+              <label >MerchantOrder:</label>
+              {{order.merchantOrderId}}
+            </td>
+        </tr>
+          <tr>
+            <td>
+              <div class="text-danger">
+              <label >Amount:</label>
+                {{order.amount}}$
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <br>
+
+    </div>
+    <br>
+    <div  class="container h-100 d-flex justify-content-center">
+
+
+    </div>
+    <div  class="container h-100 d-flex justify-content-center ">
+      <div class="jumbotron my-auto w-25">
+        <div>
+          <h3>Select payment method</h3>
+        </div>
+        <div class="form-check">
+          <select class="form-control w-auto align-content-center" [(ngModel)]="order.paymentMethod"  id="exampleFormControlSelect1">
+            <option>PayPal</option>
+            <option>Card</option>
+            <option>BitCoin</option>
+          </select>
+
+        </div>
+      </div>
+
+    </div>
+
+    <div  class="container h-100 d-flex justify-content-center w-25 float-right">
+      <button class="btn btn-primary float-right" (click)="proceedPayment(order)">Proceed</button>
+    </div>
+
+  </div>
+
+  <div class="fixed-bottom d-flex justify-content-center " style="height: 100px;">
+    <img src="https://cdn.shopify.com/s/files/1/0073/7198/0885/files/logo_wps_x61@2x.png?v=1602902545">
+  </div>
+</body>
