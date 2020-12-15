@@ -3,6 +3,7 @@ package com.paymentconcentrator.bank.service;
 import com.paymentconcentrator.bank.dto.BankRequestDto;
 import com.paymentconcentrator.bank.dto.BankResponseDTO;
 import com.paymentconcentrator.bank.dto.IssuerDetailsDTO;
+import com.paymentconcentrator.bank.dto.TransactionCompletedDTO;
 import com.paymentconcentrator.bank.enumeration.TransactionStatus;
 import com.paymentconcentrator.bank.enumeration.TransactionType;
 import com.paymentconcentrator.bank.model.Account;
@@ -49,11 +50,11 @@ public class TransactionService {
                 TransactionStatus.IN_PROGRESS, acquirer, dto.getSuccessUrl(), dto.getFailedUrl(), dto.getErrorUrl(), dto.getMerchantOrderId());
         transactionRepository.save(transaction);
         response.setId(paymentId);
-        response.setUrl("localhost:");
+        response.setUrl("localhost:4400/pay/"+paymentId);
         return response;
     }
 
-    public String checkIssuerData(IssuerDetailsDTO dto) {
+    public TransactionCompletedDTO checkIssuerData(IssuerDetailsDTO dto) {
         Transaction acquirerTransaction = transactionRepository.findFirstByPaymentIdOrderByType(dto.getPaymentId());
         Card card = cardRepository.findByNumber(dto.getNumber());
         if (card == null) {
@@ -64,7 +65,7 @@ public class TransactionService {
                     card.getAccount().getFunds() < acquirerTransaction.getAmount()) {
                 acquirerTransaction.setStatus(TransactionStatus.CANCELLED);
                 transactionRepository.save(acquirerTransaction);
-                return acquirerTransaction.getFailedUrl();
+                return new TransactionCompletedDTO(acquirerTransaction.getFailedUrl());
             }
             acquirerTransaction.setStatus(TransactionStatus.COMPLETED);
             transactionRepository.save(acquirerTransaction);
@@ -73,9 +74,9 @@ public class TransactionService {
                     null, null, acquirerTransaction.getMerchantOrderId());
             transactionRepository.save(transaction);
             moveFunds(acquirerTransaction.getAccount(), card.getAccount(), acquirerTransaction.getAmount());
-            return acquirerTransaction.getSuccessUrl();
+            return new TransactionCompletedDTO(acquirerTransaction.getSuccessUrl());
         }
-        return acquirerTransaction.getFailedUrl();
+        return new TransactionCompletedDTO(acquirerTransaction.getFailedUrl());
     }
 
     private void moveFunds(Account acquirer, Account issuer, double amount) {

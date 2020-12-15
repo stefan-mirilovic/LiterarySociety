@@ -3,15 +3,14 @@ package com.paymentconcentrator.bank.controller;
 import com.paymentconcentrator.bank.dto.BankRequestDto;
 import com.paymentconcentrator.bank.dto.BankResponseDTO;
 import com.paymentconcentrator.bank.dto.IssuerDetailsDTO;
+import com.paymentconcentrator.bank.dto.TransactionCompletedDTO;
 import com.paymentconcentrator.bank.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = "http://localhost:4400")
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
@@ -25,9 +24,9 @@ public class BankController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
-	@PostMapping("/pay")
+	@PostMapping(value = "/pay")
 	public ResponseEntity<?> pay(@RequestBody IssuerDetailsDTO dto){
-		String response = transactionService.checkIssuerData(dto);
+		TransactionCompletedDTO response = transactionService.checkIssuerData(dto);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 }
