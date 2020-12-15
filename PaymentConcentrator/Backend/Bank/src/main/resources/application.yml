@@ -20,7 +20,7 @@ spring:
 
   #kreira tabele na osnovu anotacija @Entity i kada aplikacija zavrsi sa radom dropuje ih
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
 
   #https://stackoverflow.com/questions/43905119/postgres-error-method-org-postgresql-jdbc-pgconnection-createclob-is-not-imple
     properties:
