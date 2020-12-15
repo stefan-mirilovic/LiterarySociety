@@ -1,9 +1,7 @@
 package com.paymentconcentrator.bank.service;
 
-import com.paymentconcentrator.bank.dto.BankRequestDto;
-import com.paymentconcentrator.bank.dto.BankResponseDTO;
-import com.paymentconcentrator.bank.dto.IssuerDetailsDTO;
-import com.paymentconcentrator.bank.dto.TransactionCompletedDTO;
+import com.paymentconcentrator.bank.client.PaymentConcentratorClient;
+import com.paymentconcentrator.bank.dto.*;
 import com.paymentconcentrator.bank.enumeration.TransactionStatus;
 import com.paymentconcentrator.bank.enumeration.TransactionType;
 import com.paymentconcentrator.bank.model.Account;
@@ -13,11 +11,9 @@ import com.paymentconcentrator.bank.repository.AccountRepository;
 import com.paymentconcentrator.bank.repository.CardRepository;
 import com.paymentconcentrator.bank.repository.TransactionRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -25,9 +21,8 @@ public class TransactionService {
 
     private final TransactionRepository transactionRepository;
     private final AccountRepository accountRepository;
-
-    @Autowired
-    private CardRepository cardRepository;
+    private final CardRepository cardRepository;
+    private final PaymentConcentratorClient paymentConcentratorClient;
 
     public BankResponseDTO create(BankRequestDto dto) {
         BankResponseDTO response = new BankResponseDTO();
@@ -69,11 +64,12 @@ public class TransactionService {
             }
             acquirerTransaction.setStatus(TransactionStatus.COMPLETED);
             transactionRepository.save(acquirerTransaction);
-            Transaction transaction = new Transaction(acquirerTransaction.getAmount(), LocalDateTime.now(), TransactionType.OUTFLOW,
+            Transaction issuerTransaction = new Transaction(acquirerTransaction.getAmount(), LocalDateTime.now(), TransactionType.OUTFLOW,
                     acquirerTransaction.getPaymentId(), TransactionStatus.COMPLETED, card.getAccount(), null,
                     null, null, acquirerTransaction.getMerchantOrderId());
-            transactionRepository.save(transaction);
+            transactionRepository.save(issuerTransaction);
             moveFunds(acquirerTransaction.getAccount(), card.getAccount(), acquirerTransaction.getAmount());
+            sendResultToPaymentConcentrator(acquirerTransaction);
             return new TransactionCompletedDTO(acquirerTransaction.getSuccessUrl());
         }
         return new TransactionCompletedDTO(acquirerTransaction.getFailedUrl());
@@ -84,5 +80,10 @@ public class TransactionService {
         issuer.setFunds(issuer.getFunds() - amount);
         accountRepository.save(acquirer);
         accountRepository.save(issuer);
+    }
+
+    private void sendResultToPaymentConcentrator(Transaction transaction) {
+        paymentConcentratorClient.sendResult(new PcResultDTO(transaction.getMerchantOrderId(), transaction.getId(),
+                transaction.getTimestamp().toString(), transaction.getPaymentId()));
     }
 }

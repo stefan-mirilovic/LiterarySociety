@@ -3,6 +3,7 @@ package com.paymentconcentrator.cp.controller;
 import com.netflix.ribbon.proxy.annotation.Http;
 import com.paymentconcentrator.cp.client.BankClient;
 import com.paymentconcentrator.cp.dto.BankRequestDto;
+import com.paymentconcentrator.cp.dto.BankResultDTO;
 import com.paymentconcentrator.cp.dto.OrderDto;
 import com.paymentconcentrator.cp.service.RequestBankService;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +43,10 @@ public class HomeController {
         bankClient.getBank(bankRequestDto);
     }
 
-
+    @PostMapping("result/bank")
+    public void receiveResult(@RequestBody BankResultDTO dto) {
+        System.out.println("Result from bank: " + dto.toString());
+    }
 
 }
 
