@@ -1,6 +1,8 @@
 export interface Order {
-  merchantId:string;
-  merchantOrderId:string;
-  amount:number;
-  paymentMethod:string;
+  merchantId: string;
+  amount: number;
+  paymentMethod: string;
+  successUrl: string;
+  failedUrl: string;
+  errorUrl: string;
 }

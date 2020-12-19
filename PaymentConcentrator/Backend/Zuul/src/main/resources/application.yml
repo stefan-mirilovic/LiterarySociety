@@ -21,7 +21,7 @@ zuul:
     payment-concentrator:
       path: /payment-concentrator/**
       service-id: payment-concentrator
-    bank:
+    bank1:
       path: /bank/**
       service-id: bank
     paypal:
@@ -33,3 +33,6 @@ zuul:
     pcc:
       path: /pcc/**
       service-id: pcc
+
+ribbon:
+  ReadTimeout: 60000

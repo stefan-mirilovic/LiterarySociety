@@ -10,7 +10,7 @@ public class BankRequestDto {
 	private UUID merchantId;
 	private String merchantPassword;
 	private Double amount;
-	private UUID merchantOrderId;
+	private Long merchantOrderId;
 	private LocalDateTime merchantTimestamp;
 	private String successUrl;
 	private String failedUrl;

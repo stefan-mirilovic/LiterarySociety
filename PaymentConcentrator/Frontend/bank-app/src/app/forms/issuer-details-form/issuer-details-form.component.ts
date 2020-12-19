@@ -42,7 +42,7 @@ onSubmit(customerData) {
     this.BankService.purchase(issuerDetails).subscribe(
       {
         next: (response) => {
-          window.location.href = response;
+          window.location.href = response.url;
         }/*,
         error: data => {
           if (data.error && typeof data.error === "string")

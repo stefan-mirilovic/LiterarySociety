@@ -1,8 +1,6 @@
 package com.paymentconcentrator.cp.controller;
 
-import com.netflix.ribbon.proxy.annotation.Http;
-import com.paymentconcentrator.cp.client.BankClient;
-import com.paymentconcentrator.cp.dto.BankRequestDto;
+import com.paymentconcentrator.cp.dto.BankResponseDTO;
 import com.paymentconcentrator.cp.dto.BankResultDTO;
 import com.paymentconcentrator.cp.dto.OrderDto;
 import com.paymentconcentrator.cp.service.RequestBankService;
@@ -18,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class HomeController {
 
-    private final BankClient bankClient;
     private final RequestBankService requestBankService;
 
     @Value("${server.port}")
@@ -33,19 +30,17 @@ public class HomeController {
     public ResponseEntity<OrderDto> chosePayment(OrderDto orderDto){
         orderDto.setMerchantId("e655cc16-7442-40eb-98e1-abf9690c4152");
         orderDto.setAmount(3142.7);
-        orderDto.setMerchantOrderId("2b7d5124-5688-47e8-800e-412d0e965302");
         return new ResponseEntity<>(orderDto, HttpStatus.OK);
     }
 
     @PostMapping("/pay/bank")
-    public void pay(@RequestBody OrderDto orderDto){
-        BankRequestDto bankRequestDto = requestBankService.createRequest(orderDto);
-        bankClient.getBank(bankRequestDto);
+    public ResponseEntity<BankResponseDTO> pay(@RequestBody OrderDto orderDto){
+        return new ResponseEntity<>(requestBankService.createRequest(orderDto), HttpStatus.OK);
     }
 
     @PostMapping("result/bank")
     public void receiveResult(@RequestBody BankResultDTO dto) {
-        System.out.println("Result from bank: " + dto.toString());
+        requestBankService.receiveResult(dto);
     }
 
 }
