@@ -14,7 +14,7 @@ spring:
     database: POSTGRESQL
     generate-ddl: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     properties:
       hibernate:
         jdbc:

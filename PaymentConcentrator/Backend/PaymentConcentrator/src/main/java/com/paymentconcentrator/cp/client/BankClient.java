@@ -1,6 +1,7 @@
 package com.paymentconcentrator.cp.client;
 
 import com.paymentconcentrator.cp.dto.BankRequestDto;
+import com.paymentconcentrator.cp.dto.BankResponseDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -8,5 +9,5 @@ import org.springframework.web.bind.annotation.PostMapping;
 public interface BankClient {
 
 	@PostMapping(value = "/api")
-	public void getBank(BankRequestDto bankRequestDto);
+	BankResponseDTO getBank(BankRequestDto bankRequestDto);
 }

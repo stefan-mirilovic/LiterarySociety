@@ -2,6 +2,8 @@ import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {Order} from "../model/Order";
 import {Observable} from "rxjs";
+import { BankResponse } from "../model/BankResponse";
+import { environment } from "src/environments/environment";
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +19,7 @@ export class PayService {
   }
 
   public paymentProceed(order: Order){
-    return this.http.post("http://localhost:8081/api/pay/bank", order);
+    return this.http.post<BankResponse>(`${environment.baseUrl}/pay/bank`, order);
   }
 
 

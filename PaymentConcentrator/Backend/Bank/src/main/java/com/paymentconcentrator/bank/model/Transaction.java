@@ -6,7 +6,6 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Data
 @Entity
@@ -34,7 +33,7 @@ public class Transaction {
     private TransactionStatus status;
 
     @Column
-    private UUID merchantOrderId;
+    private Long merchantOrderId;
 
     @Column
     private String successUrl;
@@ -52,7 +51,7 @@ public class Transaction {
     public Transaction() {
     }
 
-    public Transaction(Double amount, LocalDateTime timestamp, TransactionType type, Long paymentId, TransactionStatus status, Account account, String successUrl, String failedUrl, String errorUrl, UUID merchantOrderId) {
+    public Transaction(Double amount, LocalDateTime timestamp, TransactionType type, Long paymentId, TransactionStatus status, Account account, String successUrl, String failedUrl, String errorUrl, Long merchantOrderId) {
         this.amount = amount;
         this.timestamp = timestamp;
         this.type = type;

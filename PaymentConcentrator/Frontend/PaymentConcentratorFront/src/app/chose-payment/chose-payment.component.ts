@@ -9,22 +9,35 @@ import {PayService} from "../service/pay-service";
 })
 export class ChosePaymentComponent implements OnInit {
 
-  order : Order = {merchantId:'',merchantOrderId:'',amount:0,paymentMethod:''}
+  order : Order = {
+    merchantId:'84074cf2-3d74-11eb-9d51-0242ac130002',
+    amount:200,
+    paymentMethod:'bank',
+    successUrl: "https://screenmessage.com/hxqx",
+    failedUrl: "https://screenmessage.com/keib",
+    errorUrl: "https://screenmessage.com/gbvv"
+  }
 
   constructor(private payService: PayService) { }
 
   ngOnInit(): void {
-    this.payService.getOrder().subscribe(
+    /*this.payService.getOrder().subscribe(
       res=>{
         this.order=res;
       },
       error => {
         alert('Something wrong');
-      });
+      });*/
   }
 
   public proceedPayment(orderReady: Order){
-    this.payService.paymentProceed(this.order).subscribe();
+    this.payService.paymentProceed(this.order).subscribe(
+      {
+        next: (response) => {
+          window.location.href = response.url;
+        }
+      }
+    );
 
   }
 

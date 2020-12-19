@@ -1,7 +1,7 @@
-export class IssuerDetails {
-    public url: String;
+export class TransactionCompleted {
+    public url: string;
 
-    constructor(url: String) {
+    constructor(url: string) {
         this.url = url;
     }
 }

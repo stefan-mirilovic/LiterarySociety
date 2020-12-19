@@ -1,6 +1,8 @@
 package com.paymentconcentrator.cp.service;
 
 import com.paymentconcentrator.cp.dto.BankRequestDto;
+import com.paymentconcentrator.cp.dto.BankResponseDTO;
+import com.paymentconcentrator.cp.dto.BankResultDTO;
 import com.paymentconcentrator.cp.dto.OrderDto;
 import org.springframework.stereotype.Service;
 
@@ -11,5 +13,7 @@ public interface RequestBankService {
 	 * @param orderDto contains price and id of order
 	 * @return BankRequestDto
 	 */
-	BankRequestDto createRequest(OrderDto orderDto);
+	BankResponseDTO createRequest(OrderDto orderDto);
+
+    void receiveResult(BankResultDTO dto);
 }
