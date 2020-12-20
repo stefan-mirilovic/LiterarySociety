@@ -36,6 +36,7 @@ export class ChosePaymentComponent implements OnInit {
       this.payService.paymentProceed(this.order).subscribe(
           {
             next: (response) => {
+              console.log(response);
               window.location.href = response.url;
             }
           }

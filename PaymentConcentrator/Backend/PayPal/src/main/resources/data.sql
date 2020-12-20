@@ -1,0 +1,1 @@
+insert into account(id, client_id, client_secret, merchant_id) VALUES (2,'AfwO0PrJ-jxKkJ55izfX31PY0Z8Ho6rFnG5lDhsgj63829kCKbk-c9jQxNgJn-PF-PpkLDaYKrmkysFN','EI22aqpaXi1b7JljwvDFwLJr0zKOZ1gy_l2NMoSr9TPm0buuO1coX-8e1Jszyi92qiUWLJKwmrLzwINi','84074cf2-3d74-11eb-9d51-0242ac130002');

@@ -51,7 +51,7 @@ public class TransactionService {
                 TransactionStatus.IN_PROGRESS, acquirer, dto.getSuccessUrl(), dto.getFailedUrl(), dto.getErrorUrl(), dto.getMerchantOrderId());
         transactionRepository.save(transaction);
         response.setId(paymentId);
-        response.setUrl("localhost:4400/purchase/"+paymentId);
+        response.setUrl("http://localhost:4400/purchase/"+paymentId);
         logger.info("Transaction created (id" + transaction.getId() +  ", paymentId: " + paymentId +"). DTO: " + dto.toString());
         return response;
     }
