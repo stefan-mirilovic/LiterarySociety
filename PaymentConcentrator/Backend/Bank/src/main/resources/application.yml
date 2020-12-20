@@ -13,14 +13,14 @@ spring:
     url: jdbc:postgresql://localhost:5432/bank1
     username: postgres
     password: root
-
+    data: classpath:data.sql
   #JPA-Hibernate
   jpa:
     show-sql: true
 
   #kreira tabele na osnovu anotacija @Entity i kada aplikacija zavrsi sa radom dropuje ih
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
 
   #https://stackoverflow.com/questions/43905119/postgres-error-method-org-postgresql-jdbc-pgconnection-createclob-is-not-imple
     properties:

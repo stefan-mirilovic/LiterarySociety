@@ -12,11 +12,12 @@ spring:
     platform: postgres
     url: jdbc:postgresql://localhost:5432/pc
     username: postgres
+    data: classpath:data.sql
   jpa:
     database: POSTGRESQL
     generate-ddl: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
         jdbc:
