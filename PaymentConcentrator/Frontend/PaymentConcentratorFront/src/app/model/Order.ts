@@ -5,4 +5,5 @@ export interface Order {
   successUrl: string;
   failedUrl: string;
   errorUrl: string;
+  paymentUrl: string;
 }

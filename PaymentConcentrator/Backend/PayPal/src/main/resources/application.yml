@@ -1,8 +1,37 @@
 server:
   port: 8083
+
 spring:
   application:
     name: ${springboot.app.name:paypal}
+
+  #Spring DataSource
+  datasource:
+    driverClassName: org.postgresql.Driver
+
+    initialization-mode: always
+    platform: postgres
+    url: jdbc:postgresql://localhost:5432/paypal
+    username: postgres
+    password: root
+
+  #JPA-Hibernate
+  jpa:
+    show-sql: true
+
+    #kreira tabele na osnovu anotacija @Entity i kada aplikacija zavrsi sa radom dropuje ih
+    hibernate:
+      ddl-auto: update
+
+    #https://stackoverflow.com/questions/43905119/postgres-error-method-org-postgresql-jdbc-pgconnection-createclob-is-not-imple
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+
+        #optimizacija za postgres upite
+        dialect: org.hibernate.dialect.PostgreSQL95Dialect
 
 eureka:
   client:
@@ -13,3 +42,12 @@ eureka:
   instance:
     prefer-ip-address: true
 
+ribbon:
+  timeout: 60000
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 6000000
+        readTimeout: 100000
