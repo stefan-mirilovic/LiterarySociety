@@ -38,9 +38,7 @@
         </div>
         <div class="form-check">
           <select class="form-control w-auto align-content-center" [(ngModel)]="order.paymentMethod"  id="exampleFormControlSelect1">
-            <option>PayPal</option>
-            <option>Card</option>
-            <option>BitCoin</option>
+            <option *ngFor="let payment of allPaymentServices" value="{{payment.url}}:{{payment.name}}">{{payment.name}}</option>
           </select>
 
         </div>

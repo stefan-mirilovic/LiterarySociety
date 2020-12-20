@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
-public class HomeController {
+public class BankController {
 
     private final RequestBankService requestBankService;
 
@@ -24,13 +24,6 @@ public class HomeController {
     @GetMapping
     public String home(){
         return "hello from payment concentrator : " + port;
-    }
-
-    @GetMapping("/chose/payment")
-    public ResponseEntity<OrderDto> chosePayment(OrderDto orderDto){
-        orderDto.setMerchantId("e655cc16-7442-40eb-98e1-abf9690c4152");
-        orderDto.setAmount(3142.7);
-        return new ResponseEntity<>(orderDto, HttpStatus.OK);
     }
 
     @PostMapping("/pay/bank")

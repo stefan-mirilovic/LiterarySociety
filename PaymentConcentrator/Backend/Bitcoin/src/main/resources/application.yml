@@ -4,6 +4,8 @@ spring:
   application:
     name: ${springboot.app.name:bitcoin}
 
+
+
 eureka:
   client:
     service-url:
