@@ -1,0 +1,41 @@
+<h1>Your Bank Account Info</h1>
+<form [formGroup]="registerForm">
+    <div>
+        <label for="name">
+          First Name
+        </label>
+        <input id="name" type="text" formControlName="name" readonly>
+    </div>
+    <div>
+        <label for="surname">
+          Last Name
+        </label>
+        <input id="surname" type="text" formControlName="surname" readonly>
+    </div>
+    <div>
+        <label for="cardNumber">
+          Card Number
+        </label>
+        <input id="cardNumber" type="text" formControlName="cardNumber" readonly>
+    </div>
+    <div>
+        <label for="securityCode">
+          Security Code
+        </label>
+        <input id="securityCode" type="text" formControlName="securityCode" readonly>
+    </div>
+    <div>
+        <label for="funds">
+          Funds ($)
+        </label>
+        <input id="funds" type="number" formControlName="funds" readonly>
+    </div>
+    <button (click)="this.addFundsToggle = !this.addFundsToggle">Show/Hide adding funds...</button>
+    <div *ngIf="this.addFundsToggle">
+        <label for="addFunds">
+          Add Funds
+        </label>
+        <input id="addFunds" type="number" formControlName="addFunds">
+    </div>
+    <button *ngIf="this.addFundsToggle" (click)="onSubmit(registerForm.value)">Add Funds</button>
+</form>

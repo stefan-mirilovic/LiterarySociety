@@ -39,3 +39,8 @@ eureka:
         enabled: true
   instance:
     prefer-ip-address: true
+
+
+bank:
+  frontend: 4400
+  bin: 111111

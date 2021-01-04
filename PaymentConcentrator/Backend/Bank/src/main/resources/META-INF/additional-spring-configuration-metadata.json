@@ -1,0 +1,13 @@
+{
+  "properties": [
+    {
+      "name": "bank.frontend",
+      "type": "java.lang.String",
+      "description": "Description for bank.frontend."
+    },
+    {
+      "name": "bank.bin",
+      "type": "java.lang.String",
+      "description": "Description for bank.bin."
+    }
+  ] }
