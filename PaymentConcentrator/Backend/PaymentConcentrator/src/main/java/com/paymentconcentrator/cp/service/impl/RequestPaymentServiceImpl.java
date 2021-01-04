@@ -1,21 +1,21 @@
 package com.paymentconcentrator.cp.service.impl;
 
+import com.paymentconcentrator.cp.client.GenericPaymentClient;
 import com.paymentconcentrator.cp.client.PayPalClient;
-import com.paymentconcentrator.cp.client.PaymentClient;
-import com.paymentconcentrator.cp.dto.OrderDto;
-import com.paymentconcentrator.cp.dto.PayPalRequestDto;
-import com.paymentconcentrator.cp.dto.PayPalResponseDto;
-import com.paymentconcentrator.cp.dto.RedirectDto;
+import com.paymentconcentrator.cp.dto.*;
 import com.paymentconcentrator.cp.enumeration.TransactionStatus;
 import com.paymentconcentrator.cp.model.Merchant;
 import com.paymentconcentrator.cp.model.Transaction;
 import com.paymentconcentrator.cp.repository.MerchantRepository;
 import com.paymentconcentrator.cp.repository.TransactionRepository;
 import com.paymentconcentrator.cp.service.RequestPaymentService;
+import feign.Feign;
+import feign.gson.GsonDecoder;
+import feign.gson.GsonEncoder;
 import lombok.RequiredArgsConstructor;
+import org.bouncycastle.util.io.TeeInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,39 +31,44 @@ public class RequestPaymentServiceImpl implements RequestPaymentService {
 	private final MerchantRepository merchantRepository;
 	private final PayPalClient payPalClient;
 	private static final Logger logger = LoggerFactory.getLogger(RequestBankServiceImpl.class);
+
 	@Override
 	public RedirectDto createRequest(OrderDto orderDto) {
-		Transaction transaction = new Transaction();
 		UUID merchantId = UUID.fromString(orderDto.getMerchantId());
 		Merchant merchant = merchantRepository.findByMerchantId(merchantId);
+
+		Transaction transaction = new Transaction();
 		transaction.setMerchant(merchant);
 		transaction.setAmount(orderDto.getAmount());
 		transaction.setTimestamp(LocalDateTime.now());
 		transaction.setStatus(TransactionStatus.INCOMPLETE);
-	 	transaction = transactionRepository.save(transaction);
+		transaction = transactionRepository.save(transaction);
 
-		PayPalRequestDto payPalRequestDto = new PayPalRequestDto();
-		payPalRequestDto.setAmount(orderDto.getAmount());
-		payPalRequestDto.setErrorUrl(orderDto.getErrorUrl());
-		payPalRequestDto.setSuccessUrl(orderDto.getSuccessUrl());
-		payPalRequestDto.setFailedUrl(orderDto.getFailedUrl());
-		payPalRequestDto.setMerchantId(merchantId);
-		payPalRequestDto.setMerchantOrderId(transaction.getId());
-		payPalRequestDto.setMerchantTimestamp(transaction.getTimestamp());
+		GenericPaymentRequestDto genericPaymentRequestDto = new GenericPaymentRequestDto();
+		genericPaymentRequestDto.setAmount(orderDto.getAmount());
+		genericPaymentRequestDto.setErrorUrl(orderDto.getErrorUrl());
+		genericPaymentRequestDto.setSuccessUrl(orderDto.getSuccessUrl());
+		genericPaymentRequestDto.setFailedUrl(orderDto.getFailedUrl());
+		genericPaymentRequestDto.setMerchantId(merchantId);
+		genericPaymentRequestDto.setMerchantOrderId(transaction.getId());
 
-		String redirectUrl = payPalClient.pay(payPalRequestDto);
+		GenericPaymentClient genericPaymentClient = Feign.builder()
+				.encoder(new GsonEncoder())
+				.target(GenericPaymentClient.class, orderDto.getPaymentUrl() + "/api/pay");
+
+		String redirectUrl = genericPaymentClient.pay(genericPaymentRequestDto);
 		RedirectDto redirectDto = new RedirectDto();
 		redirectDto.setRedirectLink(redirectUrl);
-		logger.info("Transaction created and forwarded to"+orderDto.getPaymentMethod()+". DTO: " + orderDto.toString());
+		logger.info("Transaction created and forwarded to" + orderDto.getPaymentMethod() + ". DTO: " + orderDto.toString());
 		return redirectDto;
 	}
 
 	@Override
-	public void receiveResult(PayPalResponseDto dto) {
+	public void receiveResult(GenericPaymentResponseDto dto) {
 		Transaction transaction = transactionRepository.findById(dto.getMerchantOrderId()).get();
 		transaction.setStatus(TransactionStatus.COMPLETED);
 		transaction.setAcquirerTimestamp(LocalDateTime.now());
 		transactionRepository.save(transaction);
-		logger.info("Transaction completed by paypal. DTO: " + dto.toString());
+		logger.info("Transaction completed by " + dto.getPaymentMethod() + ". DTO: " + dto.toString());
 	}
 }

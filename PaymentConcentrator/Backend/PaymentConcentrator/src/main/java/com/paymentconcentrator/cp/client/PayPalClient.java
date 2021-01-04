@@ -1,9 +1,7 @@
 package com.paymentconcentrator.cp.client;
 
-import com.paymentconcentrator.cp.dto.OrderDto;
-import com.paymentconcentrator.cp.dto.PayPalRequestDto;
+import com.paymentconcentrator.cp.dto.GenericPaymentRequestDto;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -11,5 +9,5 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface PayPalClient {
 
 	@PostMapping(value = "/api/pay")
-	String pay(@RequestBody PayPalRequestDto orderDto);
+	String pay(@RequestBody GenericPaymentRequestDto orderDto);
 }

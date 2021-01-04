@@ -84,6 +84,7 @@ public class PayPalServiceImpl implements PayPalService {
 		payment.execute(apiContext, paymentExecution);
 		PayPalResultDto payPalResultDto = new PayPalResultDto();
 		payPalResultDto.setMerchantOrderId(merchantId);
+		payPalResultDto.setPaymentMethod("paypal");
 		return payPalResultDto;
 	}
 }

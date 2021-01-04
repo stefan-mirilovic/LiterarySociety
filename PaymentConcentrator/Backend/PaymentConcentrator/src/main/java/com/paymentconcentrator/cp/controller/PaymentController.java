@@ -1,28 +1,18 @@
 package com.paymentconcentrator.cp.controller;
 
-import com.netflix.ribbon.proxy.annotation.Http;
-import com.paymentconcentrator.cp.client.PaymentClient;
+import com.paymentconcentrator.cp.client.GenericPaymentClient;
 import com.paymentconcentrator.cp.dto.OrderDto;
-import com.paymentconcentrator.cp.dto.PayPalResponseDto;
-import com.paymentconcentrator.cp.dto.RedirectDto;
+import com.paymentconcentrator.cp.dto.GenericPaymentResponseDto;
 import com.paymentconcentrator.cp.service.DiscoveryService;
 import com.paymentconcentrator.cp.service.RequestPaymentService;
-import feign.Client;
 import feign.Feign;
-import feign.codec.Decoder;
-import feign.codec.Encoder;
+import feign.gson.GsonEncoder;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cloud.netflix.ribbon.okhttp.OkHttpLoadBalancingClient;
-import org.springframework.cloud.netflix.ribbon.okhttp.OkHttpRibbonRequest;
-import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.FeignClientsConfiguration;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
-
-import java.net.URLEncoder;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -40,7 +30,17 @@ public class PaymentController {
 	}
 
 	@PostMapping("/result")
-	public void receiveResult(@RequestBody PayPalResponseDto payPalResponseDto){
-		requestPaymentService.receiveResult(payPalResponseDto);
+	public void receiveResult(@RequestBody GenericPaymentResponseDto genericPaymentResponseDto){
+		requestPaymentService.receiveResult(genericPaymentResponseDto);
+	}
+
+	@PostMapping("/custom/pay")
+	public void customPay(){
+		GenericPaymentClient genericPaymentClient = Feign.builder()
+				.encoder(new GsonEncoder())
+				.target(GenericPaymentClient.class, "http://localhost:8084/api/pay");
+//		TestDto testDto = new TestDto();
+//		testDto.setName("Hello");
+//		genericPaymentClient.test(testDto);
 	}
 }

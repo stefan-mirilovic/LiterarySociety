@@ -1,10 +1,27 @@
 server:
   port: 8084
+
 spring:
   application:
     name: ${springboot.app.name:bitcoin}
 
-
+  datasource:
+    password: root
+    platform: postgres
+    url: jdbc:postgresql://localhost:5432/bitcoin
+    username: postgres
+    data: classpath:data.sql
+  jpa:
+    database: POSTGRESQL
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+    show-sql: true
 
 eureka:
   client:
