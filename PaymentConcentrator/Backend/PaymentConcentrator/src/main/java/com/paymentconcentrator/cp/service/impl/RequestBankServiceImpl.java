@@ -11,6 +11,9 @@ import com.paymentconcentrator.cp.model.Transaction;
 import com.paymentconcentrator.cp.repository.MerchantRepository;
 import com.paymentconcentrator.cp.repository.TransactionRepository;
 import com.paymentconcentrator.cp.service.RequestBankService;
+import feign.Feign;
+import feign.gson.GsonDecoder;
+import feign.gson.GsonEncoder;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +29,7 @@ public class RequestBankServiceImpl implements RequestBankService {
 
 	private final MerchantRepository merchantRepository;
 	private final TransactionRepository transactionRepository;
-	private final BankClient bankClient;
+	//private final BankClient bankClient;
 	private static final Logger logger = LoggerFactory.getLogger(RequestBankServiceImpl.class);
 
 	@Override
@@ -40,12 +43,17 @@ public class RequestBankServiceImpl implements RequestBankService {
 		bankRequestDto.setErrorUrl(orderDto.getErrorUrl());
 		bankRequestDto.setFailedUrl(orderDto.getFailedUrl());
 		bankRequestDto.setSuccessUrl(orderDto.getSuccessUrl());
-		bankRequestDto.setMerchantTimestamp(transaction.getTimestamp());
+		bankRequestDto.setMerchantTimestamp(transaction.getTimestamp().toString());
 		bankRequestDto.setMerchantOrderId(transaction.getId());
 		bankRequestDto.setAmount(orderDto.getAmount());
 		bankRequestDto.setMerchantId(merchant.getMerchantId());
 		bankRequestDto.setMerchantPassword(merchant.getMerchantPassword());
-		BankResponseDTO response = bankClient.getBank(bankRequestDto);
+		BankClient bankClient = Feign.builder()
+				.encoder(new GsonEncoder())
+				.decoder(new GsonDecoder())
+				.target(BankClient.class, merchant.getBankUrl() + "/api");
+		BankResponseDTO response = bankClient.forwardToBank(bankRequestDto);
+
 		logger.info("Transaction created and forwarded to bank. DTO: " + bankRequestDto.toString());
 		return response;
 	}

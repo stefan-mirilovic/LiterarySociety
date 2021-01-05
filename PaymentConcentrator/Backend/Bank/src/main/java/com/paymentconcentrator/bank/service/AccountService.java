@@ -9,6 +9,8 @@ import com.paymentconcentrator.bank.model.Card;
 import com.paymentconcentrator.bank.repository.AccountRepository;
 import com.paymentconcentrator.bank.repository.CardRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +29,7 @@ public class AccountService {
     private final CardRepository cardRepository;
     private final PCCClient pccClient;
     private final AccountMapper accountMapper = new AccountMapper();
+    private static final Logger logger = LoggerFactory.getLogger(AccountService.class);
 
     @Value("${bank.bin}")
     private String bin;
@@ -44,9 +47,10 @@ public class AccountService {
         account.setCards(new ArrayList<>());
         account.setTransactions(new ArrayList<>());
         account = accountRepository.save(account);
+        logger.info("Account created. ID: "+account.getId());
         Card card = new Card();
         card.setCardHolderName(dto.getName() + " " + dto.getSurname());
-        String expDate = LocalDate.now().format(DateTimeFormatter.ofPattern("MM/yyyy"));
+        String expDate = LocalDate.now().plusYears(3).format(DateTimeFormatter.ofPattern("MM/yyyy"));
         card.setExpDate(expDate);
         do {
             card.setNumber(bin + generateRandomNumbers(10));
@@ -54,8 +58,11 @@ public class AccountService {
         card.setSecurityCode(generateRandomNumbers(3));
         card.setAccount(account);
 
-        cardRepository.save(card);
+        card = cardRepository.save(card);
+        logger.info("Card created. ID: "+card.getId());
+        logger.info("Synchronizing account with PCC. ID: "+account.getId());
         pccClient.createAccount(new PCCAccountCreateDTO(card.getNumber(), "http://localhost:"+port));
+        logger.info("Account synchronized with PCC. ID: "+account.getId());
         return accountMapper.toDtoWithCard(card.getAccount(), card);
     }
 
@@ -81,6 +88,7 @@ public class AccountService {
         Account account = accountRepository.findById(dto.getId()).orElseThrow(() -> new NotFoundException("Account not found"));
         account.setFunds(account.getFunds() + dto.getAmount());
         accountRepository.save(account);
+        logger.info("Added funds to account. ID: "+account.getId()+" Amount: "+dto.getAmount());
         return accountMapper.toDto(account);
     }
 }

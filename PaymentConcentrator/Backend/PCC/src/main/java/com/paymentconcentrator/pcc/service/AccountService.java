@@ -14,6 +14,10 @@ public class AccountService {
 
     private final AccountRepository accountRepository;
 
+    public Account findByCardNumber(String cardNumber) {
+        return accountRepository.findByCardNumber(cardNumber);
+    }
+
     @Transactional(rollbackFor=Exception.class)
     public AccountCreateResponseDTO create(AccountCreateDTO dto) {
         Account account = new Account(null, dto.getCardNumber(), dto.getBankUrl());

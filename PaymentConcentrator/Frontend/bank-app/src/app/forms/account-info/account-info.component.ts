@@ -37,6 +37,7 @@ export class AccountInfoComponent implements OnInit {
       surname: new FormControl("", [Validators.required]),
       cardNumber: new FormControl("", [Validators.required]),
       securityCode: new FormControl("", [Validators.required]),
+      expDate: new FormControl("", [Validators.required]),
       funds: new FormControl(null, [Validators.required]),
       addFunds: new FormControl(0, [Validators.required])
     });
@@ -52,6 +53,7 @@ export class AccountInfoComponent implements OnInit {
             surname: result.surname,
             cardNumber: result.number,
             securityCode: result.securityCode,
+            expDate: result.expDate,
             funds: result.funds
           })
         },

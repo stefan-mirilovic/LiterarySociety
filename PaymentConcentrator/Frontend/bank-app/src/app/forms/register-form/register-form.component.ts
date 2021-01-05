@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AccountCreate } from 'src/app/model/account-create';
 import { AccountService } from 'src/app/service/account.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-register-form',
@@ -12,6 +13,7 @@ import { AccountService } from 'src/app/service/account.service';
 })
 export class RegisterFormComponent implements OnInit {
   registerForm;
+  bankName = environment.bankName
 
   constructor(
     private router: Router,
@@ -27,7 +29,7 @@ export class RegisterFormComponent implements OnInit {
     });
   }
 
-  onSubmit(data) {
+  onSubmit() {
     let account = new AccountCreate(this.registerForm.value.name, this.registerForm.value.surname)  
       this.accountService.register(account).subscribe(
         {

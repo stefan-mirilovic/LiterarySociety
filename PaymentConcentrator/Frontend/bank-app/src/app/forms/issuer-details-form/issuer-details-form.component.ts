@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IssuerDetails } from 'src/app/model/issuer-details';
@@ -18,8 +19,9 @@ export class IssuerDetailsFormComponent implements OnInit {
   constructor(
     route: ActivatedRoute,
     private formBuilder: FormBuilder,
-    private BankService: BankService
-  ) {
+    private BankService: BankService,
+    private toastr: ToastrService
+    ) {
     const temp: Observable<number> = route.params.pipe(map(p => p.id))
     temp.subscribe( id => {
       if (id)
@@ -43,15 +45,14 @@ onSubmit(customerData) {
       {
         next: (response) => {
           window.location.href = response.url;
-        }/*,
+        },
         error: data => {
           if (data.error && typeof data.error === "string")
-            this.toast.error(data.error);
+            this.toastr.error(data.error);
           else
-            this.toast.error("Error creating ad!");
-        }*/
+            this.toastr.error("Error paying!");
+        }
       }
     );
-    console.warn('Your order has been submitted', customerData);
   }
 }

@@ -42,5 +42,5 @@ eureka:
 
 
 bank:
-  frontend: 4400
+  frontend: http://localhost:4400
   bin: 111111

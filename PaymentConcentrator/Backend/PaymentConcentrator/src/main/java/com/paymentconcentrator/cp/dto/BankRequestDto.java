@@ -11,7 +11,7 @@ public class BankRequestDto {
 	private String merchantPassword;
 	private Double amount;
 	private Long merchantOrderId;
-	private LocalDateTime merchantTimestamp;
+	private String merchantTimestamp;
 	private String successUrl;
 	private String failedUrl;
 	private String errorUrl;

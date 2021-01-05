@@ -44,6 +44,9 @@ public class Transaction {
     @Column
     private String errorUrl;
 
+    @Column
+    private Long foreignOrderId;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account", referencedColumnName = "id")
     private Account account;

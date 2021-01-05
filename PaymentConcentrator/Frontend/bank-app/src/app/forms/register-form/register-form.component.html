@@ -1,5 +1,5 @@
-<h1>Welcome to Bank!</h1>
-<form [formGroup]="registerForm" (ngSubmit)="onSubmit(registerForm.value)">
+<h1>Welcome to {{bankName}}!</h1>
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
     <div>
         <label for="name">
           First Name

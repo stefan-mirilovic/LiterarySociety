@@ -1,9 +1,7 @@
 package com.paymentconcentrator.bank.controller;
 
-import com.paymentconcentrator.bank.dto.BankRequestDto;
-import com.paymentconcentrator.bank.dto.BankResponseDTO;
-import com.paymentconcentrator.bank.dto.IssuerDetailsDTO;
-import com.paymentconcentrator.bank.dto.TransactionCompletedDTO;
+import com.paymentconcentrator.bank.dto.*;
+import com.paymentconcentrator.bank.exception.NotFoundException;
 import com.paymentconcentrator.bank.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,7 +24,23 @@ public class BankController {
 
 	@PostMapping(value = "/pay")
 	public ResponseEntity<?> pay(@RequestBody IssuerDetailsDTO dto){
-		TransactionCompletedDTO response = transactionService.checkIssuerData(dto);
-		return new ResponseEntity<>(response, HttpStatus.OK);
+		try {
+			TransactionCompletedDTO response = transactionService.checkIssuerData(dto);
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		} catch (NotFoundException e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+		} catch (Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@PostMapping(value = "/pay-pcc")
+	public ResponseEntity<?> payPCC(@RequestBody PCCTransactionRequestDTO dto){
+		try {
+			PCCTransactionResponseDTO response = transactionService.checkIssuerDataPCC(dto);
+			return new ResponseEntity<>(response, HttpStatus.CREATED);
+		} catch (Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
 	}
 }
