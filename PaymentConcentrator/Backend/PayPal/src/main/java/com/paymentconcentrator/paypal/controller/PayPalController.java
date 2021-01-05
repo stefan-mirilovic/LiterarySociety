@@ -4,13 +4,11 @@ import com.paymentconcentrator.paypal.client.PaymentConcentratorClient;
 import com.paymentconcentrator.paypal.dto.PayPalRequestDto;
 import com.paymentconcentrator.paypal.dto.PayPalResultDto;
 import com.paymentconcentrator.paypal.service.PayPalService;
-import com.paypal.api.payments.Links;
 import com.paypal.api.payments.Payment;
 import com.paypal.base.rest.PayPalRESTException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 

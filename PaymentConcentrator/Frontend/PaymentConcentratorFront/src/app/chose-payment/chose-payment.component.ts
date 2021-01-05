@@ -43,7 +43,7 @@ export class ChosePaymentComponent implements OnInit {
       );
     }
     else{
-      orderReady.paymentUrl=splitted[0].concat(splitted[1]).concat(":").concat(splitted[2]);
+      orderReady.paymentUrl=splitted[0].concat(":").concat(splitted[1]).concat(":").concat(splitted[2]);
       alert(orderReady.paymentUrl);
       this.payService.paymentServiceProceed(orderReady).subscribe(
           {

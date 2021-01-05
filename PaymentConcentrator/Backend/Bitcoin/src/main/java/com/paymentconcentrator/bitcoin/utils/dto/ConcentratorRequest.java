@@ -1,4 +1,4 @@
-package com.paymentconcentrator.cp.dto;
+package com.paymentconcentrator.bitcoin.utils.dto;
 
 import lombok.Data;
 
@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
-public class PayPalRequestDto {
+public class ConcentratorRequest {
 	private UUID merchantId;
 	private String merchantPassword;
 	private Double amount;
