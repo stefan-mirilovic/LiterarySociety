@@ -1,0 +1,16 @@
+<h1>Welcome to {{bankName}}!</h1>
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <div>
+        <label for="name">
+          First Name
+        </label>
+        <input id="name" type="text" formControlName="name">
+    </div>
+    <div>
+        <label for="surname">
+          Last Name
+        </label>
+        <input id="surname" type="text" formControlName="surname">
+    </div>
+    <button type="submit">Register</button>
+</form>

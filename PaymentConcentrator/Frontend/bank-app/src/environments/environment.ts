@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  baseUrl: "http://localhost:8662/bank/api"
+  baseUrl: "http://localhost:8082/api",
+  bankName: "Bank 1"
 };
 
 /*

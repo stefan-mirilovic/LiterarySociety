@@ -17,7 +17,7 @@
         <file>${LOGS}/payment-concentrator.log</file>
         <encoder
                 class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <Pattern>%d Ad %p %C{1.} [%t] %m%n</Pattern>
+            <Pattern>%d Bank %p %C{1.} [%t] %m%n</Pattern>
         </encoder>
 
         <rollingPolicy
