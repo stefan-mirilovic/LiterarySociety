@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {LiterarySociety} from '../model/LiterarySociety';
 import {Router} from "@angular/router"
+import { MerchantService } from '../service/merchant.service';
+import { Merchant } from '../model/Merchant';
+import { ToastrService } from 'ngx-toastr';
  
 
 @Component({
@@ -13,13 +16,30 @@ export class RegisterComponent implements OnInit {
 
 	literarySociety : LiterarySociety = {name:'', username:'',password:'',email:'' };
 
-	constructor(private router: Router) {
+	constructor(
+		private router: Router,
+		private merchantService: MerchantService,
+		private toastr: ToastrService
+	) {
 
 	}
 	ngOnInit() { }
 
 	onRegister() {
-		console.log(this.literarySociety.name + this.literarySociety.username + this.literarySociety.password +this.literarySociety.email);
-		this.router.navigate(['/login']);		
+		let merchant: Merchant = {id:undefined, email:this.literarySociety.email, merchantId:undefined, merchantPassword:this.literarySociety.password};
+		this.merchantService.create(merchant).subscribe({
+			next: (result) => {
+				this.toastr.success("Registered successfully!");
+				localStorage.setItem("loggedIn", result.email)
+				this.router.navigate(['/dashboard']);		
+				localStorage.setItem("loggedInMerchantId", result.merchantId)
+			},
+			error: data => {
+				if (data.error && typeof data.error === "string")
+				  this.toastr.error(data.error);
+				else
+				  this.toastr.error("Error registering!");
+			  }
+		});
 	}
 }

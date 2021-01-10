@@ -50,6 +50,7 @@ public class RequestPaymentServiceImpl implements RequestPaymentService {
 		genericPaymentRequestDto.setSuccessUrl(orderDto.getSuccessUrl());
 		genericPaymentRequestDto.setFailedUrl(orderDto.getFailedUrl());
 		genericPaymentRequestDto.setMerchantId(merchantId);
+		genericPaymentRequestDto.setMerchantPassword(merchant.getMerchantPassword());
 		genericPaymentRequestDto.setMerchantOrderId(transaction.getId());
 
 		GenericPaymentClient genericPaymentClient = Feign.builder()

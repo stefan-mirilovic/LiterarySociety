@@ -4,11 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PaymentDto {
-	private Long id;
-	private String name;
-	private String url;
+public class MerchantDTO {
+    private Long id;
+    private String email;
+    private UUID merchantId;
+    private String merchantPassword;
 }

@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import {Order} from "../model/Order";
-import {PayService} from "../service/pay-service";
-import {PaymentService} from "../model/PaymentService";
+import { Order } from "../model/Order";
+import { PayService } from "../service/pay-service";
+import { PaymentService } from "../model/PaymentService";
+import { MerchantService } from '../service/merchant.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-chose-payment',
@@ -10,29 +12,45 @@ import {PaymentService} from "../model/PaymentService";
 })
 export class ChosePaymentComponent implements OnInit {
   allPaymentServices: PaymentService[];
-  order : Order = {
-    merchantId:'84074cf2-3d74-11eb-9d51-0242ac130002',
-    amount:200,
-    paymentMethod:'bank',
+  paymentMethod: PaymentService;
+  order: Order = {
+    merchantId: '84074cf2-3d74-11eb-9d51-0242ac130002',
+    amount: 200,
+    paymentMethod: 'bank',
     successUrl: "https://screenmessage.com/hxqx",
     failedUrl: "https://screenmessage.com/keib",
     errorUrl: "https://screenmessage.com/gbvv",
     paymentUrl: ""
   }
 
-  constructor(private payService: PayService) { }
+  constructor(
+    private payService: PayService,
+    private merchantService: MerchantService,
+    private toastr: ToastrService
+  ) { }
 
   ngOnInit(): void {
-    this.payService.discoverAllPaymentType().subscribe(
-        res =>{
-          this.allPaymentServices=res;
-        }
-    );
+    /*this.payService.discoverAllPaymentType().subscribe(
+      res => {
+        this.allPaymentServices = res;
+      }
+    );*/
+    this.merchantService.getPaymentTypes(this.order.merchantId).subscribe({
+			next: (result) => {
+        this.allPaymentServices = result;
+			},
+			error: data => {
+				if (data.error && typeof data.error === "string")
+				  this.toastr.error(data.error);
+				else
+				  this.toastr.error("Error getting payment services!");
+			  }
+		});
   }
 
-  public proceedPayment(orderReady: Order){
-    var splitted = orderReady.paymentMethod.split(":");
-    if(splitted[3]==="bank"){
+  public proceedPayment(orderReady: Order) {
+    /*var splitted = orderReady.paymentMethod.split(":");
+    if(splitted[3].toLowerCase().startsWith("bank")){
       this.payService.paymentProceed(this.order).subscribe(
           {
             next: (response) => {
@@ -52,7 +70,17 @@ export class ChosePaymentComponent implements OnInit {
             }
           }
       );
-    }
+    }*/
+    orderReady.paymentMethod = this.paymentMethod.name.concat(':').concat(this.paymentMethod.url)
+    orderReady.paymentUrl = this.paymentMethod.url;
+    //alert(orderReady.paymentUrl);
+    this.payService.paymentServiceProceed(orderReady).subscribe(
+      {
+        next: (response) => {
+          window.location.href = response.redirectLink;
+        }
+      }
+    );
   }
 
 

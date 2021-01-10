@@ -16,13 +16,13 @@ public class BankController {
 
 	private final TransactionService transactionService;
 
-	@PostMapping
-	public ResponseEntity<BankResponseDTO> getBank(@RequestBody BankRequestDto bankRequestDto){
-		BankResponseDTO response = transactionService.create(bankRequestDto);
+	@PostMapping(value = "/pay")
+	public ResponseEntity<String> createTransaction(@RequestBody BankRequestDto bankRequestDto){
+		String response = transactionService.create(bankRequestDto);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
-	@PostMapping(value = "/pay")
+	@PostMapping(value = "/pay-part-2")
 	public ResponseEntity<?> pay(@RequestBody IssuerDetailsDTO dto){
 		try {
 			TransactionCompletedDTO response = transactionService.checkIssuerData(dto);

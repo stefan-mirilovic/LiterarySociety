@@ -1,0 +1,7 @@
+<p>Logged in as <b>{{this.email}}</b></p><button (click)="logOut()">Log Out</button>
+<h3>Payment methods</h3>
+<ul>
+    <li *ngFor="let pt of paymentTypes">{{pt.name}}</li>
+</ul>
+<p *ngIf="!paymentTypes || paymentTypes.length === 0">You have no payment methods!</p>
+<button (click)="router.navigate(['add-payment'])">Add...</button>

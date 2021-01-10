@@ -11,6 +11,10 @@ import { Choose_pageComponent } from './choose_page/choose_page.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ChosePaymentComponent } from './chose-payment/chose-payment.component';
 import {HttpClientModule} from "@angular/common/http";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
+import { MerchantPageComponent } from './merchant-page/merchant-page.component';
+import { AddPaymentComponent } from './add-payment/add-payment.component';
 
 
 @NgModule({
@@ -21,7 +25,9 @@ import {HttpClientModule} from "@angular/common/http";
     NavigationComponent,
     CardComponent,
     Choose_pageComponent,
-    ChosePaymentComponent
+    ChosePaymentComponent,
+    MerchantPageComponent,
+    AddPaymentComponent
   ],
   imports: [
     FormsModule,
@@ -29,8 +35,9 @@ import {HttpClientModule} from "@angular/common/http";
     BrowserModule,
     AppRoutingModule,
     FontAwesomeModule,
-    HttpClientModule
-
+    HttpClientModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]
