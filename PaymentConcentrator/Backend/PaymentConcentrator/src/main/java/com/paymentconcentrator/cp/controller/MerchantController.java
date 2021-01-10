@@ -1,6 +1,7 @@
 package com.paymentconcentrator.cp.controller;
 
 import com.paymentconcentrator.cp.dto.MerchantBankConnectDTO;
+import com.paymentconcentrator.cp.dto.MerchantConnectDTO;
 import com.paymentconcentrator.cp.dto.MerchantDTO;
 import com.paymentconcentrator.cp.dto.PaymentDto;
 import com.paymentconcentrator.cp.service.impl.MerchantService;
@@ -49,8 +50,18 @@ public class MerchantController {
         }
     }
 
+    @PostMapping(value = "/{id}/payment-types")
+    public ResponseEntity<?> addPaymentType(@PathVariable String id, @RequestBody MerchantConnectDTO dto){
+        try {
+            PaymentDto response = merchantService.addPaymentType(id, dto);
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @PostMapping(value = "/{id}/payment-types/bank")
-    public ResponseEntity<?> addPaymentType(@PathVariable String id, @RequestBody MerchantBankConnectDTO dto){
+    public ResponseEntity<?> addPaymentTypeBank(@PathVariable String id, @RequestBody MerchantBankConnectDTO dto){
         try {
             PaymentDto response = merchantService.addPaymentTypeBank(id, dto);
             return new ResponseEntity<>(response, HttpStatus.CREATED);

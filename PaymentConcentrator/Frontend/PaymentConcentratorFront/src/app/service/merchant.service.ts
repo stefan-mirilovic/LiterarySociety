@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { CardDetails } from '../model/CardDetails';
 import { Merchant } from '../model/Merchant';
+import { MerchantConnect } from '../model/MerchantConnect';
 import { PaymentService } from '../model/PaymentService';
 
 @Injectable({
@@ -27,6 +28,10 @@ export class MerchantService {
 
   public addPaymentTypeBank(id: string, data: CardDetails): Observable<PaymentService> {
     return this.http.post<PaymentService>(`${environment.baseUrl}/merchants/${id}/payment-types/bank`, data);
+  }
+
+  public addPaymentType(id: string, data: MerchantConnect): Observable<PaymentService> {
+    return this.http.post<PaymentService>(`${environment.baseUrl}/merchants/${id}/payment-types`, data);
   }
 
 }

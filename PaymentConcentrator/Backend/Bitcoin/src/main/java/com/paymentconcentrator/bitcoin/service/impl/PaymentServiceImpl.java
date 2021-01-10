@@ -4,10 +4,7 @@ import com.paymentconcentrator.bitcoin.model.Account;
 import com.paymentconcentrator.bitcoin.repository.AccountRepository;
 import com.paymentconcentrator.bitcoin.service.PaymentService;
 import com.paymentconcentrator.bitcoin.utils.PaymentUtils;
-import com.paymentconcentrator.bitcoin.utils.dto.ApiResponseDto;
-import com.paymentconcentrator.bitcoin.utils.dto.ConcentratorRequest;
-import com.paymentconcentrator.bitcoin.utils.dto.PaymentUrlDto;
-import com.paymentconcentrator.bitcoin.utils.dto.PreparedPaymentDto;
+import com.paymentconcentrator.bitcoin.utils.dto.*;
 import com.paymentconcentrator.bitcoin.utils.globals.PaymentConstants;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +26,15 @@ public class PaymentServiceImpl implements PaymentService {
 		String paymentUrl = Objects.requireNonNull(response.getBody().getPaymentUrl());
 
 		return paymentUrl;
+	}
+
+	@Override
+	public MerchantConnectRequestDTO connectMerchant(MerchantConnectRequestDTO dto) {
+		Account account = new Account();
+		account.setToken(dto.getUsername());
+		account.setMerchantId(dto.getMerchantId());
+		accountRepository.save(account);
+		return dto;
 	}
 
 	private PreparedPaymentDto preparePayment(ConcentratorRequest request) {

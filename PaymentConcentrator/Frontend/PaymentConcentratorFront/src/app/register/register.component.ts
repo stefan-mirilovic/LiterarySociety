@@ -17,7 +17,7 @@ export class RegisterComponent implements OnInit {
 	literarySociety : LiterarySociety = {name:'', username:'',password:'',email:'' };
 
 	constructor(
-		private router: Router,
+		public router: Router,
 		private merchantService: MerchantService,
 		private toastr: ToastrService
 	) {

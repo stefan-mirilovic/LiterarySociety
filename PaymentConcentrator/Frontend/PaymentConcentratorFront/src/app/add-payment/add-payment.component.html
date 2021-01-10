@@ -1,33 +1,52 @@
 <button (click)="router.navigate(['/dashboard'])">Back</button>
 <label class="form-control">Select payment service</label>
-<select class="form-control w-auto align-content-center" [(ngModel)]="paymentMethod"  id="exampleFormControlSelect1">
-    <option *ngFor="let payment of allPaymentServices" [ngValue]="payment">{{payment.name}}</option>
+<select class="form-control w-auto align-content-center" [(ngModel)]="paymentMethod" id="exampleFormControlSelect1">
+  <option selected [ngValue]="undefined">Select payment service...</option>
+  <option *ngFor="let payment of allPaymentServices" [ngValue]="payment">{{payment.name}}</option>
 </select>
 <!--Banke-->
-<form *ngIf="this.paymentMethod && this.paymentMethod.name.toLowerCase().startsWith('bank')" [formGroup]="bankForm" (ngSubmit)="onBankSubmit()">
-    <div>
-        <label for="cardNumber">
-          Card Number
-        </label>
-        <input id="cardNumber" type="text" formControlName="cardNumber">
-    </div>
-    <div>
-        <label for="expDate">
-          Expiry Date (ex. 09/2025)
-        </label>
-        <input id="expDate" type="text" formControlName="expDate">
-    </div>
-    <div>
-        <label for="securityCode">
-          Security Code
-        </label>
-        <input id="securityCode" type="text" formControlName="securityCode">
-    </div>
-    <div>
-        <label for="cardHolderName">
-          Card Holder Name
-        </label>
-        <input id="cardHolderName" type="text" formControlName="cardHolderName">
-    </div>
-    <button type="submit">Register</button>
+<form *ngIf="this.paymentMethod && this.paymentMethod.name.toLowerCase().startsWith('bank')" [formGroup]="bankForm"
+  (ngSubmit)="onBankSubmit()">
+  <div>
+    <label for="cardNumber">
+      Card Number
+    </label>
+    <input id="cardNumber" type="text" formControlName="cardNumber">
+  </div>
+  <div>
+    <label for="expDate">
+      Expiry Date (ex. 09/2025)
+    </label>
+    <input id="expDate" type="text" formControlName="expDate">
+  </div>
+  <div>
+    <label for="securityCode">
+      Security Code
+    </label>
+    <input id="securityCode" type="text" formControlName="securityCode">
+  </div>
+  <div>
+    <label for="cardHolderName">
+      Card Holder Name
+    </label>
+    <input id="cardHolderName" type="text" formControlName="cardHolderName">
+  </div>
+  <button type="submit">Register</button>
+</form>
+<!--Paypal-->
+<form *ngIf="this.paymentMethod && !this.paymentMethod.name.toLowerCase().startsWith('bank')" [formGroup]="genericForm"
+  (ngSubmit)="onGenericSubmit()">
+  <div>
+    <label for="username">
+      Username
+    </label>
+    <input id="username" type="text" formControlName="username" placeholder="Client ID or Token">
+  </div>
+  <div>
+    <label for="password">
+      Password
+    </label>
+    <input id="password" type="text" formControlName="password" placeholder="Client Secret if exists">
+  </div>
+  <button type="submit">Register</button>
 </form>

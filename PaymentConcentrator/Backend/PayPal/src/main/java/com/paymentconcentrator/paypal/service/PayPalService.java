@@ -1,5 +1,6 @@
 package com.paymentconcentrator.paypal.service;
 
+import com.paymentconcentrator.paypal.dto.MerchantConnectRequestDTO;
 import com.paymentconcentrator.paypal.dto.PayPalRequestDto;
 import com.paymentconcentrator.paypal.dto.PayPalResultDto;
 import com.paypal.api.payments.Payment;
@@ -18,4 +19,6 @@ public interface PayPalService {
 	String redirectLink(Payment payment);
 
 	PayPalResultDto executePayment(String paymentId, String payerId, Long merchantId) throws PayPalRESTException;
+
+    MerchantConnectRequestDTO connectMerchant(MerchantConnectRequestDTO dto) throws Exception;
 }

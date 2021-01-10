@@ -2,12 +2,10 @@ package com.paymentconcentrator.bitcoin.controller;
 
 import com.paymentconcentrator.bitcoin.client.PaymentConcentratorClient;
 import com.paymentconcentrator.bitcoin.service.PaymentService;
-import com.paymentconcentrator.bitcoin.utils.dto.BitcoinResultDto;
-import com.paymentconcentrator.bitcoin.utils.dto.ConcentratorRequest;
-import com.paymentconcentrator.bitcoin.utils.dto.PaymentUrlDto;
-import com.paymentconcentrator.bitcoin.utils.dto.TestDto;
+import com.paymentconcentrator.bitcoin.utils.dto.*;
 import com.paymentconcentrator.bitcoin.utils.globals.PaymentConstants;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,7 +34,15 @@ public class BitcoinController {
 		return PaymentConstants.Url.REDIRECT_SUCCESS;
 	}
 
-
+	@PostMapping(value = "/merchant-connect")
+	public ResponseEntity<?> connectMerchant(@RequestBody MerchantConnectRequestDTO dto){
+		try {
+			MerchantConnectRequestDTO response = paymentService.connectMerchant(dto);
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+	}
 
 
 }
