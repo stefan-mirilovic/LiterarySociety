@@ -29,7 +29,6 @@ public class RequestBankServiceImpl implements RequestBankService {
 
 	private final MerchantRepository merchantRepository;
 	private final TransactionRepository transactionRepository;
-	//private final BankClient bankClient;
 	private static final Logger logger = LoggerFactory.getLogger(RequestBankServiceImpl.class);
 
 	@Override

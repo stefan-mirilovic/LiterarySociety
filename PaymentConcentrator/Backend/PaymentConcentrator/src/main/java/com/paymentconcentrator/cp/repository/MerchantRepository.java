@@ -7,4 +7,8 @@ import java.util.UUID;
 
 public interface MerchantRepository extends JpaRepository<Merchant, Long> {
 	Merchant findByMerchantId(UUID merchantId);
+
+	Merchant findByEmail(String email);
+
+	Boolean existsByEmail(String email);
 }

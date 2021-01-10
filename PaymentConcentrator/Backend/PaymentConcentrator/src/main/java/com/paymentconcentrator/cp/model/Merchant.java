@@ -1,6 +1,8 @@
 package com.paymentconcentrator.cp.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.List;
@@ -9,12 +11,17 @@ import java.util.UUID;
 @Data
 @Table
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 public class Merchant {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	@Column
 	private Long id;
+
+	@Column
+	private String email;
 
 	@Column
 	private UUID merchantId;

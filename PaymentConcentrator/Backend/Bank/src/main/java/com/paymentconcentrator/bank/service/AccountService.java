@@ -2,6 +2,7 @@ package com.paymentconcentrator.bank.service;
 
 import com.paymentconcentrator.bank.client.PCCClient;
 import com.paymentconcentrator.bank.dto.*;
+import com.paymentconcentrator.bank.exception.InvalidCredentialsException;
 import com.paymentconcentrator.bank.exception.NotFoundException;
 import com.paymentconcentrator.bank.mapper.AccountMapper;
 import com.paymentconcentrator.bank.model.Account;
@@ -90,5 +91,22 @@ public class AccountService {
         accountRepository.save(account);
         logger.info("Added funds to account. ID: "+account.getId()+" Amount: "+dto.getAmount());
         return accountMapper.toDto(account);
+    }
+
+    public MerchantBankConnectRequestDTO connectMerchant(MerchantBankConnectRequestDTO dto) throws Exception {
+        Card card = cardRepository.findByNumber(dto.getNumber());
+        Account account = card.getAccount();
+        if (card == null) {
+            throw new NotFoundException("Invalid Credentials!");
+        }
+        if (!dto.getSecurityCode().equals(card.getSecurityCode()) || !dto.getExpDate().equals(card.getExpDate()) ||
+                !dto.getCardHolderName().equals(card.getCardHolderName())) {
+            throw new InvalidCredentialsException("Invalid Credentials!");
+        }
+        account.setMerchantId(dto.getMerchantId());
+        account.setMerchantPassword(dto.getMerchantPassword());
+        accountRepository.save(account);
+        logger.info("Account ID: "+account.getId()+" has been connected to payment concentrator and made a merchant");
+        return dto;
     }
 }

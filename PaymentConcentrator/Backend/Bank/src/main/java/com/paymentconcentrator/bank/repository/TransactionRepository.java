@@ -1,5 +1,6 @@
 package com.paymentconcentrator.bank.repository;
 
+import com.paymentconcentrator.bank.enumeration.TransactionStatus;
 import com.paymentconcentrator.bank.enumeration.TransactionType;
 import com.paymentconcentrator.bank.model.Transaction;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,4 +17,6 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     Transaction findFirstByPaymentIdOrderByType(Long paymentId);
 
     Transaction findFirstByTypeOrderByPaymentIdDesc(TransactionType type);
+
+    List<Transaction> findByStatus(TransactionStatus status);
 }

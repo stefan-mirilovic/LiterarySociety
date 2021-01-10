@@ -13,6 +13,6 @@ export class BankService {
   constructor(private http: HttpClient) { }
 
   purchase(data: IssuerDetails): Observable<TransactionCompleted> {
-    return this.http.post<TransactionCompleted>(`${environment.baseUrl}/pay`, data);
+    return this.http.post<TransactionCompleted>(`${environment.baseUrl}/pay-part-2`, data);
   }
 }

@@ -10,9 +10,9 @@
 		<table>
          <tr class="col-sm-12">
 			     <td class="col-xs-4">
-                     <label class="label">Username :</label></td>
+                     <label class="label">Email :</label></td>
 				<td class ="col-xs-10">	 
-		             <input type="text" [(ngModel)]="literarySociety.username" name="username" id="username" placeholder="Enter username" class="form-control last">
+		             <input type="text" [(ngModel)]="literarySociety.email" name="email" id="email" placeholder="Enter email" class="form-control last">
                 </td>
 		   </tr>
 
@@ -31,7 +31,9 @@
 		    <tr class="col-sm-12">
 		         <td><button class="btn btn-warning sbutton" (click)="onLogin()">Login</button></td>
 			</tr>
-		
+			<tr class="col-12">
+				<td><button class="btn btn-info" (click)="router.navigate(['/register'])">Don't have an account? Register</button></td>
+			</tr>
 		</table>
 		</div>
 	</div>

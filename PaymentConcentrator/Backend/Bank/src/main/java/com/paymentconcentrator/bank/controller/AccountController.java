@@ -49,4 +49,14 @@ public class AccountController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @PostMapping(value = "/merchant-connect")
+    public ResponseEntity<?> connectMerchant(@RequestBody MerchantBankConnectRequestDTO dto){
+        try {
+            MerchantBankConnectRequestDTO response = accountService.connectMerchant(dto);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 }
