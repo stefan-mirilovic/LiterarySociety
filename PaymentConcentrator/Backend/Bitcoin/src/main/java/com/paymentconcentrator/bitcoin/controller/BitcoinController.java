@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 @RestController()
 @RequiredArgsConstructor
@@ -26,12 +27,12 @@ public class BitcoinController {
 	}
 
 	@GetMapping(GET_SUCCESS)
-	public String getPaymentSuccess(@PathVariable("id") Long paymentId){
+	public RedirectView getPaymentSuccess(@PathVariable("id") Long paymentId){
 		BitcoinResultDto bitcoinResultDto = new BitcoinResultDto();
 		bitcoinResultDto.setMerchantOrderId(paymentId);
 		bitcoinResultDto.setPaymentMethod(PaymentConstants.Info.PAYMENT_METHOD);
 		paymentConcentratorClient.sendResult(bitcoinResultDto);
-		return PaymentConstants.Url.REDIRECT_SUCCESS;
+		return new RedirectView("https://screenmessage.com/hxqx");
 	}
 
 	@PostMapping(value = "/merchant-connect")
