@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.IOException;
 
@@ -39,10 +40,10 @@ public class PayPalController {
 	}
 
 	@GetMapping(SUCCESS_URL+"/{id}")
-	public String successPay(@RequestParam("paymentId") String paymentId, @RequestParam("PayerID") String payerId, @PathVariable(value = "id") Long merchantOrder) throws PayPalRESTException {
+	public RedirectView successPay(@RequestParam("paymentId") String paymentId, @RequestParam("PayerID") String payerId, @PathVariable(value = "id") Long merchantOrder) throws PayPalRESTException {
 		PayPalResultDto payment = payPalService.executePayment(paymentId, payerId, merchantOrder);
 		paymentConcentratorClient.sendResult(payment);
-		return "success <p><a href=\"http://localhost:4200/register\">Back to home</a></p>";
+		return new RedirectView("https://screenmessage.com/hxqx");
 	}
 
 	@PostMapping(value = "/merchant-connect")
