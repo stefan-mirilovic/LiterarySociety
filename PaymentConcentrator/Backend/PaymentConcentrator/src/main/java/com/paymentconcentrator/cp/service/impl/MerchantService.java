@@ -1,6 +1,7 @@
 package com.paymentconcentrator.cp.service.impl;
 
 import com.paymentconcentrator.cp.client.BankClient;
+import com.paymentconcentrator.cp.client.GenericPaymentClient;
 import com.paymentconcentrator.cp.dto.*;
 import com.paymentconcentrator.cp.mapper.MerchantMapper;
 import com.paymentconcentrator.cp.mapper.PaymentTypeMapper;
@@ -78,6 +79,30 @@ public class MerchantService {
         merchant.getPayments().add(paymentType);
         merchantRepository.save(merchant);
         logger.info("Merchant ID: "+merchant.getId()+" has been connected to bank at "+dto.getUrl());
+        return paymentTypeMapper.toDTO(paymentType);
+    }
+
+    public PaymentDto addPaymentType(String id, MerchantConnectDTO dto) {
+        Merchant merchant = merchantRepository.findByMerchantId(UUID.fromString(id));
+        PaymentType paymentType = paymentTypeRepository.findByName(dto.getName());
+        if (paymentType == null) {
+            paymentType = new PaymentType(null, dto.getName(), dto.getUrl(), new ArrayList<>());
+            paymentType = paymentTypeRepository.save(paymentType);
+        }
+        MerchantConnectRequestDTO merchantDTO = new MerchantConnectRequestDTO();
+        merchantDTO.setUsername(dto.getUsername());
+        merchantDTO.setPassword(dto.getPassword());
+        merchantDTO.setMerchantId(merchant.getMerchantId());
+        merchantDTO.setMerchantPassword(merchant.getMerchantPassword());
+        GenericPaymentClient bankClient = Feign.builder()
+                .encoder(new GsonEncoder())
+                .decoder(new GsonDecoder())
+                .target(GenericPaymentClient.class, dto.getUrl() + "/api/pay/merchant-connect");
+        bankClient.forwardMerchant(merchantDTO);
+
+        merchant.getPayments().add(paymentType);
+        merchantRepository.save(merchant);
+        logger.info("Merchant ID: "+merchant.getId()+" has been connected to payment service at "+dto.getUrl());
         return paymentTypeMapper.toDTO(paymentType);
     }
 }

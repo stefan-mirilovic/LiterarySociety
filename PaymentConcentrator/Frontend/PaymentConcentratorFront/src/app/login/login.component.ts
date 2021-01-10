@@ -15,7 +15,7 @@ export class LoginComponent implements OnInit {
 	literarySociety : LiterarySociety = {name:'',email:'',password:'',username:''};
 	
 	constructor (
-		private router: Router,
+		public router: Router,
 		private merchantService: MerchantService,
 		private toastr: ToastrService
 		) {

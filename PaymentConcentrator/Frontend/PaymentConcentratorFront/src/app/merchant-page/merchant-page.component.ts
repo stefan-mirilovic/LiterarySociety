@@ -14,7 +14,7 @@ export class MerchantPageComponent implements OnInit {
   paymentTypes: PaymentService[];
 
   constructor(
-    private router: Router,
+    public router: Router,
     private merchantService: MerchantService,
     private toastr: ToastrService
   ) { }

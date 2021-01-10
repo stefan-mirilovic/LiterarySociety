@@ -1,5 +1,6 @@
 package com.paymentconcentrator.paypal.service.impl;
 
+import com.paymentconcentrator.paypal.dto.MerchantConnectRequestDTO;
 import com.paymentconcentrator.paypal.dto.PayPalRequestDto;
 import com.paymentconcentrator.paypal.dto.PayPalResultDto;
 import com.paymentconcentrator.paypal.model.Account;
@@ -87,4 +88,15 @@ public class PayPalServiceImpl implements PayPalService {
 		payPalResultDto.setPaymentMethod("paypal");
 		return payPalResultDto;
 	}
+
+	@Override
+	public MerchantConnectRequestDTO connectMerchant(MerchantConnectRequestDTO dto) {
+		Account account = new Account();
+		account.setClientId(dto.getUsername());
+		account.setClientSecret(dto.getPassword());
+		account.setMerchantId(dto.getMerchantId());
+		accountRepository.save(account);
+		return dto;
+	}
+
 }

@@ -14,7 +14,7 @@ spring:
     url: jdbc:postgresql://localhost:5432/paypal
     username: postgres
     password: root
-    data: classpath:data.sql
+    #data: classpath:data.sql
 
   #JPA-Hibernate
   jpa:

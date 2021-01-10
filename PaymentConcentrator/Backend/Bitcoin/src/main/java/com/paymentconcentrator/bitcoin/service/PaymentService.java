@@ -1,6 +1,7 @@
 package com.paymentconcentrator.bitcoin.service;
 
 import com.paymentconcentrator.bitcoin.utils.dto.ConcentratorRequest;
+import com.paymentconcentrator.bitcoin.utils.dto.MerchantConnectRequestDTO;
 import com.paymentconcentrator.bitcoin.utils.dto.PaymentUrlDto;
 import com.paymentconcentrator.bitcoin.utils.dto.PreparedPaymentDto;
 
@@ -14,6 +15,5 @@ public interface PaymentService{
 	 String sendOrder(ConcentratorRequest concentratorRequest);
 
 
-
-
+    MerchantConnectRequestDTO connectMerchant(MerchantConnectRequestDTO dto);
 }

@@ -1,12 +1,15 @@
 package com.paymentconcentrator.paypal.controller;
 
 import com.paymentconcentrator.paypal.client.PaymentConcentratorClient;
+import com.paymentconcentrator.paypal.dto.MerchantConnectRequestDTO;
 import com.paymentconcentrator.paypal.dto.PayPalRequestDto;
 import com.paymentconcentrator.paypal.dto.PayPalResultDto;
 import com.paymentconcentrator.paypal.service.PayPalService;
 import com.paypal.api.payments.Payment;
 import com.paypal.base.rest.PayPalRESTException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -40,5 +43,15 @@ public class PayPalController {
 		PayPalResultDto payment = payPalService.executePayment(paymentId, payerId, merchantOrder);
 		paymentConcentratorClient.sendResult(payment);
 		return "success <p><a href=\"http://localhost:4200/register\">Back to home</a></p>";
+	}
+
+	@PostMapping(value = "/merchant-connect")
+	public ResponseEntity<?> connectMerchant(@RequestBody MerchantConnectRequestDTO dto){
+		try {
+			MerchantConnectRequestDTO response = payPalService.connectMerchant(dto);
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
 	}
 }

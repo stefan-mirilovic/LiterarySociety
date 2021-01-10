@@ -7,4 +7,6 @@ import java.util.UUID;
 
 public interface AccountRepository extends JpaRepository<Account, Long> {
 	Account findByMerchantId(UUID merchantId);
+
+	Account findByClientId(String clientId);
 }
