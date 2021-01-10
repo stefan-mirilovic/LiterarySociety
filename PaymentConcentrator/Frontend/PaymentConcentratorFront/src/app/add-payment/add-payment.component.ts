@@ -30,6 +30,23 @@ export class AddPaymentComponent implements OnInit {
     this.payService.discoverAllPaymentType().subscribe(
       res => {
         this.allPaymentServices = res;
+        this.merchantService.getPaymentTypes(localStorage.getItem("loggedInMerchantId")).subscribe({
+          next: (result) => {
+            let temp: PaymentService[] = [];
+            for (let p of this.allPaymentServices) {
+              if (result.findIndex(ps => ps.name === p.name) === -1) {
+                temp.push(p);
+              }
+            }
+            this.allPaymentServices = temp;
+          },
+          error: data => {
+            if (data.error && typeof data.error === "string")
+              this.toastr.error(data.error);
+            else
+              this.toastr.error("Error getting payment services!");
+            }
+        });
       }
     );
     this.bankForm = this.formBuilder.group({

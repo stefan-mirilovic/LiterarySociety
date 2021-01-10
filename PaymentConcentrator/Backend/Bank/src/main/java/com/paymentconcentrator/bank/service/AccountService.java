@@ -95,10 +95,10 @@ public class AccountService {
 
     public MerchantBankConnectRequestDTO connectMerchant(MerchantBankConnectRequestDTO dto) throws Exception {
         Card card = cardRepository.findByNumber(dto.getNumber());
-        Account account = card.getAccount();
         if (card == null) {
             throw new NotFoundException("Invalid Credentials!");
         }
+        Account account = card.getAccount();
         if (!dto.getSecurityCode().equals(card.getSecurityCode()) || !dto.getExpDate().equals(card.getExpDate()) ||
                 !dto.getCardHolderName().equals(card.getCardHolderName())) {
             throw new InvalidCredentialsException("Invalid Credentials!");
