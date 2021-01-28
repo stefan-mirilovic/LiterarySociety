@@ -1,11 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AccountAddFunds } from 'src/app/model/account-add-funds';
 import { AccountService } from 'src/app/service/account.service';
+import { environment } from 'src/environments/environment';
+import { AddFundsDialogComponent } from '../add-funds-dialog/add-funds-dialog.component';
 
 @Component({
   selector: 'app-account-info',
@@ -16,12 +19,14 @@ export class AccountInfoComponent implements OnInit {
   id: number;
   addFundsToggle: boolean;
   registerForm;
+  bankName = environment.bankName
 
   constructor(
     route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private accountService: AccountService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private dialog: MatDialog
   ) {
     const temp: Observable<number> = route.params.pipe(map(p => p.id))
     temp.subscribe(id => {
@@ -91,5 +96,23 @@ export class AccountInfoComponent implements OnInit {
     );
   }
 
+  openDialog() {
+    const dialogConfig = new MatDialogConfig();
 
+    dialogConfig.disableClose = false;
+    dialogConfig.autoFocus = false;
+    dialogConfig.width = "40vw";
+    dialogConfig.minWidth = "450px";
+
+    dialogConfig.data = {
+      id: this.id,
+      funds: this.registerForm.value.funds
+    };
+    this.dialog.open(AddFundsDialogComponent, dialogConfig);
+    this.dialog.afterAllClosed.subscribe({
+      next: () => {
+        this.fetchData();
+      }
+    })
+  }
 }

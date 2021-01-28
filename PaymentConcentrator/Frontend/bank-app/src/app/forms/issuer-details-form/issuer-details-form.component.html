@@ -1,4 +1,39 @@
-<form [formGroup]="checkoutForm" (ngSubmit)="onSubmit(checkoutForm.value)">
+<div class="row">
+  <div class="col-lg-4 col-md-3">
+  </div>
+  <div class="col-lg-4 col-md-6 col-12 middle-container">
+      <h1 class="title">Welcome to {{bankName}}</h1>
+      <h6 class="subtitle">please enter your details in the form below to finish the purchase</h6>
+      <form [formGroup]="checkoutForm" (ngSubmit)="onSubmit(checkoutForm.value)">
+          <mat-form-field appearance="outline">
+            <mat-label>Card Number</mat-label>
+            <input matInput id="cardNumber" type="text" formControlName="cardNumber">
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="form-field-66-left">
+            <mat-label>Expiry Date</mat-label>
+            <input matInput id="expDate" type="text" formControlName="expDate" placeholder="(ex. 09/2024)">
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="form-field-66-right">
+            <mat-label>Security Code</mat-label>
+            <input matInput id="securityCode" type="text" formControlName="securityCode">
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Card Holder Name</mat-label>
+            <input matInput id="cardHolderName" type="text" formControlName="cardHolderName">
+          </mat-form-field>
+          <button mat-raised-button type="submit" color="primary" class="submit-button">SUBMIT</button>
+        </form>
+        <div class="col-12 logo-container">
+          <div class="logo-box">
+            <img class="logo" src="assets/bank.png">
+            <h5 class="title">{{bankName}}</h5>
+            <p class="subtitle">trusted & reliable</p>
+          </div>
+        </div>
+  </div>
+</div>
+
+<!--<form [formGroup]="checkoutForm" (ngSubmit)="onSubmit(checkoutForm.value)">
     <div>
         <label for="cardNumber">
           Card Number
@@ -24,4 +59,4 @@
         <input id="cardHolderName" type="text" formControlName="cardHolderName">
     </div>
     <button type="submit">Purchase</button>
-</form>
+</form>-->

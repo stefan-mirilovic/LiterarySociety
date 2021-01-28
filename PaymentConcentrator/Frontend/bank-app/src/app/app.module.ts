@@ -10,13 +10,16 @@ import { RegisterFormComponent } from './forms/register-form/register-form.compo
 import { AccountInfoComponent } from './forms/account-info/account-info.component';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MaterialModule } from './material-module';
+import { AddFundsDialogComponent } from './forms/add-funds-dialog/add-funds-dialog.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     IssuerDetailsFormComponent,
     RegisterFormComponent,
-    AccountInfoComponent
+    AccountInfoComponent,
+    AddFundsDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -25,6 +28,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     AppRoutingModule,
     HttpClientModule,
     BrowserAnimationsModule,
+    MaterialModule,
     ToastrModule.forRoot(),
   ],
   providers: [],

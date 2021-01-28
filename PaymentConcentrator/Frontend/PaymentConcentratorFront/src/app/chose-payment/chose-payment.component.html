@@ -16,9 +16,27 @@
           <tr>
             <td>
               <div class="text-danger">
-              <label >Amount:</label>
+                <label >Amount:</label>
                 {{order.amount}}$
               </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label >Success:</label>
+                {{order.successUrl}}$
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label >Failed:</label>
+                {{order.failedUrl}}
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label >Error:</label>
+                {{order.errorUrl}}
             </td>
           </tr>
         </table>
