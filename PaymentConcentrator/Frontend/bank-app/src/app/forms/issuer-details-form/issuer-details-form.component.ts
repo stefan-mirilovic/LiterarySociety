@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IssuerDetails } from 'src/app/model/issuer-details';
 import { BankService } from 'src/app/service/bank.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-issuer-details-form',
@@ -15,6 +16,7 @@ import { BankService } from 'src/app/service/bank.service';
 export class IssuerDetailsFormComponent implements OnInit {
   paymentId: number;
   checkoutForm;
+  bankName = environment.bankName
 
   constructor(
     route: ActivatedRoute,

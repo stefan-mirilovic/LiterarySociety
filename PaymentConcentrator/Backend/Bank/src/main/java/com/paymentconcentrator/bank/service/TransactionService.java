@@ -38,12 +38,12 @@ public class TransactionService {
     @Value("${bank.frontend}")
     private String frontendUrl;
 
-    @Scheduled(fixedRate = 300000)
+    @Scheduled(fixedRate = 200000)
     public void autoFeed() {
         logger.info("Transaction check starting...");
         List<Transaction> transactions = transactionRepository.findByStatus(TransactionStatus.IN_PROGRESS);
         for (Transaction t: transactions) {
-            if (t.getTimestamp().isBefore(LocalDateTime.now().minusMinutes(30))) {
+            if (t.getTimestamp().isBefore(LocalDateTime.now().minusMinutes(20))) {
                 t.setStatus(TransactionStatus.CANCELLED);
                 transactionRepository.save(t);
                 logger.info("Transaction cancelled for taking too long to complete. ID: "+t.getId());

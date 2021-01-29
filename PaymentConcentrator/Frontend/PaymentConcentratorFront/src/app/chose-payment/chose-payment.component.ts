@@ -4,6 +4,7 @@ import { PayService } from "../service/pay-service";
 import { PaymentService } from "../model/PaymentService";
 import { MerchantService } from '../service/merchant.service';
 import { ToastrService } from 'ngx-toastr';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-chose-payment',
@@ -26,7 +27,8 @@ export class ChosePaymentComponent implements OnInit {
   constructor(
     private payService: PayService,
     private merchantService: MerchantService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
@@ -35,6 +37,19 @@ export class ChosePaymentComponent implements OnInit {
         this.allPaymentServices = res;
       }
     );*/
+    this.route.queryParams
+      .subscribe(params => {
+        console.log(params); // { order: "popular" }
+
+        this.order.merchantId = params.merchantId;
+        this.order.amount = params.amount;
+        this.order.successUrl = params.successUrl;
+        this.order.failedUrl = params.failedUrl;
+        this.order.errorUrl = params.errorUrl;
+        console.log(this.order); // popular
+      }
+    );
+  
     this.merchantService.getPaymentTypes(this.order.merchantId).subscribe({
 			next: (result) => {
         this.allPaymentServices = result;

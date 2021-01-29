@@ -1,0 +1,70 @@
+.title {
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: 300;
+}
+
+.subtitle {
+    text-align: center;
+    margin-bottom: 50px;
+    font-weight: 300;
+    color: darkgray
+}
+
+mat-form-field {
+    width: 100%;
+}
+
+mat-form-field input {
+    text-align: center;
+}
+
+.middle-container {
+    padding: 100px 60px 0 60px;
+    background-color: white;
+}
+
+.submit-button {
+    margin-top: 50px;
+    margin-left: 2.5%;
+    width: 95%;
+    height: 50px;
+}
+
+.link-container {
+    margin-top: 20px;
+    width: 100%;
+    text-align: center;
+}
+
+.logo {
+    width: 33.3%;
+    margin-left: 33.3%;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.logo-container {
+    padding: 100px 20px 50px 20px;
+}
+
+.logo-box {
+    border-radius: 10px;
+    border: solid 1px rgb(0, 0, 0, 0.1);
+    width: 50%;
+    margin: auto;
+}
+
+.logo-box .title {
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: 300;
+    color: gray;
+}
+
+.logo-box .subtitle {
+    text-align: center;
+    font-weight: 300;
+    color: darkgray;
+    margin-bottom: 10px;
+}

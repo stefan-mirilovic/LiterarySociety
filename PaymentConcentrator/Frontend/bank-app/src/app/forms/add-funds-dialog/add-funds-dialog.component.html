@@ -1,0 +1,31 @@
+<div class="row">
+    <div class="col-12">
+        <h2 class="title">{{!removeMode ? "Add Funds":"Remove Funds"}}</h2>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <mat-form-field appearance="outline">
+            <mat-label>Current Balance</mat-label>
+            <span matPrefix>€&nbsp;</span>
+            <span matSuffix [ngClass]="balanceSuffixPositive ? 'suffix-positive' : 'suffix-negative'">{{balanceSuffix}}</span>
+            <input matInput id="funds" type="number" [(ngModel)]="funds" readonly>
+        </mat-form-field>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12 order-1 currency-container">
+        <img [ngClass]="!removeMode ? 'currency-button':'currency-button-remove'" src="assets/euros/5.jpg" (click)="addFunds(5)">
+        <img [ngClass]="!removeMode ? 'currency-button':'currency-button-remove'" src="assets/euros/10.jpg"(click)="addFunds(10)">
+        <img [ngClass]="!removeMode ? 'currency-button':'currency-button-remove'" src="assets/euros/20.jpg"(click)="addFunds(20)">
+        <img [ngClass]="!removeMode ? 'currency-button':'currency-button-remove'" src="assets/euros/50.jpg"(click)="addFunds(50)">
+        <img [ngClass]="!removeMode ? 'currency-button':'currency-button-remove'" src="assets/euros/100.jpg"(click)="addFunds(100)">
+        <img [ngClass]="!removeMode ? 'currency-button':'currency-button-remove'" src="assets/euros/200.jpg"(click)="addFunds(200)">
+        <img [ngClass]="!removeMode ? 'currency-button':'currency-button-remove'" src="assets/euros/500.jpg"(click)="addFunds(500)">
+    </div>
+    <div class="col-12 order-2 currency-wallet" *ngIf="!removeMode"></div>
+    <div class="col-12 order-3 currency-wallet-remove" *ngIf="removeMode"></div>
+</div>
+<div class="row">
+    <button mat-button color="primary" class="submit-button" (click)="removeMode=!removeMode">{{!removeMode ? "Want to remove funds instead?":"Want to add funds instead?"}}</button>
+</div>

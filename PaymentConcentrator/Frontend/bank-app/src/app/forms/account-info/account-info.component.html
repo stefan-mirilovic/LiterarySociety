@@ -1,4 +1,47 @@
-<h1>Your Bank Account Info</h1>
+<div class="row">
+  <div class="col-lg-4 col-md-3">
+  </div>
+  <div class="col-lg-4 col-md-6 col-12 middle-container">
+      <h1 class="title">Your Debit Card Details</h1>
+      <form [formGroup]="registerForm">
+          <mat-form-field appearance="outline" class="form-field-half-left">
+            <mat-label>First Name</mat-label>
+            <input matInput id="name" type="text" formControlName="name" readonly>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="form-field-half-right">
+            <mat-label>Last Name</mat-label>
+            <input matInput id="surname" type="text" formControlName="surname" readonly>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Card Number</mat-label>
+            <input matInput id="cardNumber" type="text" formControlName="cardNumber" readonly>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="form-field-66-left">
+            <mat-label>Expiry Date</mat-label>
+            <input matInput id="expDate" type="text" formControlName="expDate" readonly>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="form-field-66-right">
+            <mat-label>Security Code</mat-label>
+            <input matInput id="securityCode" type="text" formControlName="securityCode" readonly>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Current Balance</mat-label>
+            <span matPrefix>€&nbsp;</span>
+            <input matInput id="funds" type="number" formControlName="funds" readonly>
+          </mat-form-field>
+          <button mat-raised-button type="submit" color="primary" class="submit-button" (click)="openDialog()">GO TO ATM MACHINE</button>
+        </form>
+        <div class="col-12 logo-container">
+          <div class="logo-box">
+            <img class="logo" src="assets/bank.png">
+            <h5 class="title">{{bankName}}</h5>
+            <p class="subtitle">trusted & reliable</p>
+          </div>
+        </div>
+  </div>
+</div>
+
+<!--<h1>Your Bank Account Info</h1>
 <form [formGroup]="registerForm">
     <div>
         <label for="name">
@@ -44,4 +87,4 @@
         <input id="addFunds" type="number" formControlName="addFunds">
     </div>
     <button *ngIf="this.addFundsToggle" (click)="onSubmit(registerForm.value)">Add Funds</button>
-</form>
+</form>-->
