@@ -35,18 +35,23 @@ export class ChooseSubscriptionComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    /*this.route.queryParams
+    this.route.queryParams
       .subscribe(params => {
-        console.log(params); // { order: "popular" }
+        console.log(params);
 
-        this.order.merchantId = params.merchantId;
-        this.order.amount = params.amount;
-        this.order.successUrl = params.successUrl;
-        this.order.failedUrl = params.failedUrl;
-        this.order.errorUrl = params.errorUrl;
-        console.log(this.order); // popular
+        if (params.merchantId) {
+          this.order.merchantId = params.merchantId;
+          this.order.amount = params.amount;
+          this.order.successUrl = params.successUrl;
+          this.order.failedUrl = params.failedUrl;
+          this.order.errorUrl = params.errorUrl;
+          this.order.frequency = params.frequency;
+          this.order.cycles = params.cycls;
+          this.order.interval = params.interval;
+          console.log(this.order);
+        }
       }
-    );*/
+    );
 
     /*this.merchantService.getPaymentTypes(this.order.merchantId).subscribe({
 			next: (result) => {

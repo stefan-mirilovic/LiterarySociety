@@ -41,18 +41,19 @@ export class ChosePaymentComponent implements OnInit {
         this.allPaymentServices = res;
       }
     );*/
-    /*this.route.queryParams
+    this.route.queryParams
       .subscribe(params => {
         console.log(params);
-
-        this.order.merchantId = params.merchantId;
-        this.order.amount = params.amount;
-        this.order.successUrl = params.successUrl;
-        this.order.failedUrl = params.failedUrl;
-        this.order.errorUrl = params.errorUrl;
-        console.log(this.order);
+        if (params.merchantId) {
+          this.order.merchantId = params.merchantId;
+          this.order.amount = params.amount;
+          this.order.successUrl = params.successUrl;
+          this.order.failedUrl = params.failedUrl;
+          this.order.errorUrl = params.errorUrl;
+          console.log(this.order);
+        }
       }
-    );*/
+    );
   
     this.merchantService.getPaymentTypes(this.order.merchantId).subscribe({
 			next: (result) => {
