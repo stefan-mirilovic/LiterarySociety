@@ -1,0 +1,25 @@
+<html>
+
+<head>
+</head>
+
+<body>
+    <div class="row ">
+        <div class="col-lg-4 col-md-3">
+        </div>
+        <div class="col-lg-4 col-md-6 col-12 middle-container">
+            <h1 class="title">Subscription Services</h1>
+            <h6 class="subtitle">select a subscription service to proceed</h6>
+            <hr class="sidebar-divider">
+            <div class="row service-container">
+                <div class="col-12 " *ngFor="let payment of allPaymentServices">
+                    <button class="service-btn" *ngIf="payment.name.startsWith('paypal')"
+                        (click)="proceed(order, payment)">{{payment.name.toUpperCase()}}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="loading-container" *ngIf="loading">
+        <mat-spinner [diameter]="200"></mat-spinner>
+    </div>
+</body>

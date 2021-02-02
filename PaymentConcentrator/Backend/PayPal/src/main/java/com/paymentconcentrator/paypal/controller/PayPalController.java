@@ -4,8 +4,10 @@ import com.paymentconcentrator.paypal.client.PaymentConcentratorClient;
 import com.paymentconcentrator.paypal.dto.MerchantConnectRequestDTO;
 import com.paymentconcentrator.paypal.dto.PayPalRequestDto;
 import com.paymentconcentrator.paypal.dto.PayPalResultDto;
+import com.paymentconcentrator.paypal.dto.SubscriptionRequestDTO;
 import com.paymentconcentrator.paypal.service.PayPalService;
 import com.paypal.api.payments.Payment;
+import com.paypal.api.payments.Plan;
 import com.paypal.base.rest.PayPalRESTException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,10 +17,9 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.IOException;
 
-
+@CrossOrigin
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api/pay")
 public class PayPalController {
 	private final PaymentConcentratorClient paymentConcentratorClient;
@@ -54,5 +55,23 @@ public class PayPalController {
 		} catch (Exception e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
+	}
+
+	@PostMapping(value = "/subscription")
+	public String subscribe(@RequestBody SubscriptionRequestDTO subscriptionRequestDto) throws PayPalRESTException, IOException {
+		String response = payPalService.createBillingPlan(subscriptionRequestDto);
+		return response;
+	}
+
+	@GetMapping("/subscription"+SUCCESS_URL+"/{id}")
+	public RedirectView successPaySubscription(@RequestParam("token") String token, @PathVariable(value = "id") Long merchantOrder) throws PayPalRESTException {
+		String successUrl = payPalService.executeBilling(token, merchantOrder);
+		return new RedirectView(successUrl);
+	}
+
+	@GetMapping("/subscription"+CANCEL_URL+"/{id}")
+	public RedirectView cancelPaySubscription(@RequestParam("token") String token, @PathVariable(value = "id") Long merchantOrder) throws PayPalRESTException {
+		String failUrl = payPalService.cancelBilling(token, merchantOrder);
+		return new RedirectView(failUrl);
 	}
 }

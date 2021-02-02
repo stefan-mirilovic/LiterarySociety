@@ -14,7 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin
 @RestController
 @RequestMapping("/api/payment/type")
 @RequiredArgsConstructor
@@ -29,9 +29,19 @@ public class PaymentController {
 		return new ResponseEntity<>(requestPaymentService.createRequest(orderDto),HttpStatus.OK);
 	}
 
+	@PostMapping("/subscription")
+	public ResponseEntity<?> paySubscription(@RequestBody OrderDto orderDto) {
+		return new ResponseEntity<>(requestPaymentService.createSubscriptionRequest(orderDto),HttpStatus.OK);
+	}
+
 	@PostMapping("/result")
 	public void receiveResult(@RequestBody GenericPaymentResponseDto genericPaymentResponseDto){
 		requestPaymentService.receiveResult(genericPaymentResponseDto);
+	}
+
+	@PostMapping("/subscription/result")
+	public void receiveSubscriptionResult(@RequestBody GenericPaymentResponseDto genericPaymentResponseDto){
+		requestPaymentService.receiveSubscriptionResult(genericPaymentResponseDto);
 	}
 
 	@PostMapping("/custom/pay")

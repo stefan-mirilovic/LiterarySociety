@@ -15,6 +15,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { MerchantPageComponent } from './merchant-page/merchant-page.component';
 import { AddPaymentComponent } from './add-payment/add-payment.component';
+import { ChooseSubscriptionComponent } from './choose-subscription/choose-subscription.component';
+import { MaterialModule } from './material-module';
 
 
 @NgModule({
@@ -27,7 +29,8 @@ import { AddPaymentComponent } from './add-payment/add-payment.component';
     Choose_pageComponent,
     ChosePaymentComponent,
     MerchantPageComponent,
-    AddPaymentComponent
+    AddPaymentComponent,
+    ChooseSubscriptionComponent
   ],
   imports: [
     FormsModule,
@@ -37,6 +40,7 @@ import { AddPaymentComponent } from './add-payment/add-payment.component';
     FontAwesomeModule,
     HttpClientModule,
     BrowserAnimationsModule,
+    MaterialModule,
     ToastrModule.forRoot()
   ],
   providers: [],

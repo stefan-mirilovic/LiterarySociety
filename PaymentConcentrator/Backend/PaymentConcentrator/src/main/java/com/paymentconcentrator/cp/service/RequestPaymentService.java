@@ -8,5 +8,9 @@ public interface RequestPaymentService {
 
 	RedirectDto createRequest(OrderDto orderDto);
 
+	RedirectDto createSubscriptionRequest(OrderDto orderDto);
+
 	void receiveResult(GenericPaymentResponseDto dto);
+
+	void receiveSubscriptionResult(GenericPaymentResponseDto genericPaymentResponseDto);
 }
