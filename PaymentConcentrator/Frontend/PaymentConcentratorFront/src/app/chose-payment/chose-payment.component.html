@@ -4,7 +4,24 @@
 </head>
 
 <body>
-  <div class="container">
+  <div class="row ">
+    <div class="col-lg-4 col-md-3">
+    </div>
+    <div class="col-lg-4 col-md-6 col-12 middle-container">
+        <h1 class="title">Payment Services</h1>
+        <h6 class="subtitle">select a payment service to proceed</h6>
+        <hr class="sidebar-divider">
+        <div class="row service-container">
+            <div class="col-12 " *ngFor="let payment of allPaymentServices">
+                <button class="service-btn" (click)="proceedPayment(order, payment)">{{payment.name.toUpperCase()}}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="loading-container" *ngIf="loading">
+    <mat-spinner [diameter]="200"></mat-spinner>
+</div>
+  <!--<div class="container">
     <div  class="container h-100 d-flex justify-content-center">
       <div class="jumbotron my-auto">
         <table>
@@ -72,5 +89,5 @@
 
   <div class="fixed-bottom d-flex justify-content-center " style="height: 100px;">
     <img src="https://cdn.shopify.com/s/files/1/0073/7198/0885/files/logo_wps_x61@2x.png?v=1602902545">
-  </div>
+  </div>-->
 </body>
