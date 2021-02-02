@@ -24,7 +24,7 @@ public class Account {
     @Column
     private String lastName;
 
-    @Column
+    @Column(unique = true)
     private UUID merchantId;
 
     @Column

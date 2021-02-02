@@ -69,4 +69,14 @@ public class MerchantController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @DeleteMapping(value = "/{merchantId}/payment-types/{id}")
+    public ResponseEntity<?> deletePaymentType(@PathVariable String merchantId, @PathVariable Long id){
+        try {
+            PaymentDto response = merchantService.deletePaymentTypeBank(merchantId, id);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 }

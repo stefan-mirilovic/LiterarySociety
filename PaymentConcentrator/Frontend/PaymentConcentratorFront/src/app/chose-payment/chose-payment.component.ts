@@ -14,6 +14,7 @@ import { ActivatedRoute } from '@angular/router';
 export class ChosePaymentComponent implements OnInit {
   allPaymentServices: PaymentService[];
   paymentMethod: PaymentService;
+  loading: boolean = false;
   order: Order = {
     merchantId: '84074cf2-3d74-11eb-9d51-0242ac130002',
     amount: 200,
@@ -40,7 +41,7 @@ export class ChosePaymentComponent implements OnInit {
         this.allPaymentServices = res;
       }
     );*/
-    this.route.queryParams
+    /*this.route.queryParams
       .subscribe(params => {
         console.log(params);
 
@@ -51,7 +52,7 @@ export class ChosePaymentComponent implements OnInit {
         this.order.errorUrl = params.errorUrl;
         console.log(this.order);
       }
-    );
+    );*/
   
     this.merchantService.getPaymentTypes(this.order.merchantId).subscribe({
 			next: (result) => {
@@ -66,36 +67,17 @@ export class ChosePaymentComponent implements OnInit {
 		});
   }
 
-  public proceedPayment(orderReady: Order) {
-    /*var splitted = orderReady.paymentMethod.split(":");
-    if(splitted[3].toLowerCase().startsWith("bank")){
-      this.payService.paymentProceed(this.order).subscribe(
-          {
-            next: (response) => {
-              console.log(response);
-              window.location.href = response.url;
-            }
-          }
-      );
-    }
-    else{
-      orderReady.paymentUrl=splitted[0].concat(":").concat(splitted[1]).concat(":").concat(splitted[2]);
-      alert(orderReady.paymentUrl);
-      this.payService.paymentServiceProceed(orderReady).subscribe(
-          {
-            next: (response) => {
-              window.location.href = response.redirectLink;
-            }
-          }
-      );
-    }*/
-    orderReady.paymentMethod = this.paymentMethod.name.concat(':').concat(this.paymentMethod.url)
-    orderReady.paymentUrl = this.paymentMethod.url;
-    //alert(orderReady.paymentUrl);
+  public proceedPayment(orderReady: Order, paymentMethod: PaymentService) {
+    orderReady.paymentMethod = paymentMethod.name.concat(':').concat(paymentMethod.url)
+    orderReady.paymentUrl = paymentMethod.url;
+    this.loading = true;
     this.payService.paymentServiceProceed(orderReady).subscribe(
       {
         next: (response) => {
           window.location.href = response.redirectLink;
+        },
+        error: () => {
+          this.loading = false;
         }
       }
     );

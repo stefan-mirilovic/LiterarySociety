@@ -35,16 +35,16 @@ public class PayPalController {
 		return response;
 	}
 
-	@GetMapping(CANCEL_URL)
-	public String cancelPay() {
-		return "cancel";
-	}
-
 	@GetMapping(SUCCESS_URL+"/{id}")
 	public RedirectView successPay(@RequestParam("paymentId") String paymentId, @RequestParam("PayerID") String payerId, @PathVariable(value = "id") Long merchantOrder) throws PayPalRESTException {
-		PayPalResultDto payment = payPalService.executePayment(paymentId, payerId, merchantOrder);
-		paymentConcentratorClient.sendResult(payment);
-		return new RedirectView("https://screenmessage.com/hxqx");
+		String successUrl = payPalService.executePayment(paymentId, payerId, merchantOrder);
+		return new RedirectView(successUrl);
+	}
+
+	@GetMapping(CANCEL_URL+"/{id}")
+	public RedirectView cancelPay(@RequestParam("paymentId") String paymentId, @RequestParam("PayerID") String payerId, @PathVariable(value = "id") Long merchantOrder) {
+		String failUrl = payPalService.cancelPayment(paymentId, payerId, merchantOrder);
+		return new RedirectView(failUrl);
 	}
 
 	@PostMapping(value = "/merchant-connect")

@@ -23,10 +23,10 @@ const routes: Routes = [
     path: 'dashboard',
     component: MerchantPageComponent
   },
-  {
+  /*{
     path: 'add-payment',
     component: AddPaymentComponent
-  },
+  },*/
   {
     path: 'choose/subscription',
     component: ChooseSubscriptionComponent

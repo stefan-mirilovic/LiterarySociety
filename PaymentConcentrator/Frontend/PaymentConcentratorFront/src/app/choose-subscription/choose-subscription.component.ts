@@ -81,6 +81,9 @@ export class ChooseSubscriptionComponent implements OnInit {
       {
         next: (response) => {
           window.location.href = response.redirectLink;
+        },
+        error: () => {
+          this.loading = false;
         }
       }
     );

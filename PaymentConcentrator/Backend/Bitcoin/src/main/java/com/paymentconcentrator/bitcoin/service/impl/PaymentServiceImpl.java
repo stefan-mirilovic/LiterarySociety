@@ -30,7 +30,11 @@ public class PaymentServiceImpl implements PaymentService {
 
 	@Override
 	public MerchantConnectRequestDTO connectMerchant(MerchantConnectRequestDTO dto) {
-		Account account = new Account();
+		Account account = accountRepository.findByMerchantId(dto.getMerchantId());
+		if (account == null) {
+			account = new Account();
+		}
+		account = new Account();
 		account.setToken(dto.getUsername());
 		account.setMerchantId(dto.getMerchantId());
 		accountRepository.save(account);
