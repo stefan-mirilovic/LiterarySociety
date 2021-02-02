@@ -21,7 +21,10 @@ export class ChosePaymentComponent implements OnInit {
     successUrl: "https://screenmessage.com/hxqx",
     failedUrl: "https://screenmessage.com/keib",
     errorUrl: "https://screenmessage.com/gbvv",
-    paymentUrl: ""
+    paymentUrl: "",
+    cycles: undefined,
+    frequency: undefined,
+    interval: undefined
   }
 
   constructor(
@@ -39,14 +42,14 @@ export class ChosePaymentComponent implements OnInit {
     );*/
     this.route.queryParams
       .subscribe(params => {
-        console.log(params); // { order: "popular" }
+        console.log(params);
 
         this.order.merchantId = params.merchantId;
         this.order.amount = params.amount;
         this.order.successUrl = params.successUrl;
         this.order.failedUrl = params.failedUrl;
         this.order.errorUrl = params.errorUrl;
-        console.log(this.order); // popular
+        console.log(this.order);
       }
     );
   

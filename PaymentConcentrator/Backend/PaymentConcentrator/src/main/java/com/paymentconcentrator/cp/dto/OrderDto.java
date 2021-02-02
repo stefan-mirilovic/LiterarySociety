@@ -13,4 +13,7 @@ public class OrderDto {
 	private String failedUrl;
 	private String errorUrl;
 	private String paymentUrl;
+	private String frequency;
+	private String interval;
+	private Integer cycles;
 }

@@ -10,5 +10,8 @@ public interface PaymentConcentratorClient {
 
 	@PostMapping(value = "/api/payment/type/result")
 	public void sendResult(PayPalResultDto payPalResultDto);
+
+	@PostMapping(value = "/api/payment/type/subscription/result")
+	public void sendSubscriptionResult(PayPalResultDto payPalResultDto);
 	
 }

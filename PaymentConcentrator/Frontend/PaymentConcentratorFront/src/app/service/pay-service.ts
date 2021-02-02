@@ -27,6 +27,10 @@ export class PayService {
     return this.http.post<RedirectDto>(`${environment.baseUrl}/payment/type/pay`,order);
   }
 
+  public subscriptioServiceProceed(order: Order):Observable<RedirectDto>{
+    return this.http.post<RedirectDto>(`${environment.baseUrl}/payment/type/subscription`,order);
+  }
+
   public discoverAllPaymentType(): Observable<any>{
     return this.http.get <any>(`${environment.baseUrl}/get/all/payments`);
   }

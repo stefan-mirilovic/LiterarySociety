@@ -3,8 +3,13 @@ package com.paymentconcentrator.paypal.service;
 import com.paymentconcentrator.paypal.dto.MerchantConnectRequestDTO;
 import com.paymentconcentrator.paypal.dto.PayPalRequestDto;
 import com.paymentconcentrator.paypal.dto.PayPalResultDto;
+import com.paymentconcentrator.paypal.dto.SubscriptionRequestDTO;
 import com.paypal.api.payments.Payment;
+import com.paypal.api.payments.Plan;
 import com.paypal.base.rest.PayPalRESTException;
+
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 
 public interface PayPalService {
 
@@ -21,4 +26,10 @@ public interface PayPalService {
 	PayPalResultDto executePayment(String paymentId, String payerId, Long merchantId) throws PayPalRESTException;
 
     MerchantConnectRequestDTO connectMerchant(MerchantConnectRequestDTO dto) throws Exception;
+
+    String createBillingPlan(SubscriptionRequestDTO subscriptionRequestDto) throws PayPalRESTException, MalformedURLException, UnsupportedEncodingException;
+
+	String executeBilling(String token, Long merchantId) throws PayPalRESTException;
+
+	String cancelBilling(String token, Long merchantOrderId);
 }

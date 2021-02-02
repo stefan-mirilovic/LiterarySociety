@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { LoginComponent } from 'src/app/login/login.component';
 import { RegisterComponent } from 'src/app/register/register.component';
 import { AddPaymentComponent } from './add-payment/add-payment.component';
+import { ChooseSubscriptionComponent } from './choose-subscription/choose-subscription.component';
 import { Choose_pageComponent } from './choose_page/choose_page.component';
 import {ChosePaymentComponent} from "./chose-payment/chose-payment.component";
 import { MerchantPageComponent } from './merchant-page/merchant-page.component';
@@ -25,7 +26,11 @@ const routes: Routes = [
   {
     path: 'add-payment',
     component: AddPaymentComponent
-  }
+  },
+  {
+    path: 'choose/subscription',
+    component: ChooseSubscriptionComponent
+  },
 
 ]
 
