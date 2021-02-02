@@ -94,6 +94,12 @@ public class AccountService {
     }
 
     public MerchantBankConnectRequestDTO connectMerchant(MerchantBankConnectRequestDTO dto) throws Exception {
+        Account merchantById = accountRepository.findByMerchantId(dto.getMerchantId());
+        if (merchantById != null) {
+            merchantById.setMerchantId(null);
+            merchantById.setMerchantPassword(null);
+            accountRepository.save(merchantById);
+        }
         Card card = cardRepository.findByNumber(dto.getNumber());
         if (card == null) {
             throw new NotFoundException("Invalid Credentials!");

@@ -1,0 +1,59 @@
+<div class="row">
+    <div class="col-12">
+        <h2 class="title">{{!editMode ? "Add Payment Method":"Edit Payment Method"}}</h2>
+    </div>
+</div>
+<div class="form-container row">
+    <div class="col-12">
+        <mat-form-field appearance="outline">
+            <mat-label>Select payment service</mat-label>
+            <mat-select [(ngModel)]="paymentMethod" *ngIf="!editMode">
+                <mat-option>None</mat-option>
+                <mat-option *ngFor="let payment of allPaymentServices" [value]="payment">{{payment.name.toUpperCase()}}
+                </mat-option>
+            </mat-select>
+            <mat-select [(value)]="paymentMethod.name" *ngIf="editMode" disabled>
+                <mat-option [value]="paymentMethod.name">{{paymentMethod.name.toUpperCase()}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <!--Paypal-->
+        <form *ngIf="this.paymentMethod && !this.paymentMethod.name.toLowerCase().startsWith('bank')"
+            [formGroup]="genericForm" (ngSubmit)="onGenericSubmit()">
+            <mat-form-field appearance="outline" class="form-field-half-left">
+                <mat-label>Username</mat-label>
+                <input matInput id="username" type="text" formControlName="username" placeholder="Client ID or Token">
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="form-field-half-left">
+                <mat-label>Password</mat-label>
+                <input matInput id="password" type="text" formControlName="password"
+                    placeholder="Client Secret if exists">
+            </mat-form-field>
+            <button type="submit" class="submit-btn">{{!editMode ? 'Register':'Update'}}</button>
+            <button type="button" class="submit-btn alt-btn" *ngIf="editMode" (click)="delete()">Delete</button>
+        </form>
+        <!--Banke-->
+        <form *ngIf="this.paymentMethod && this.paymentMethod.name.toLowerCase().startsWith('bank')"
+            [formGroup]="bankForm" (ngSubmit)="onBankSubmit()">
+            <mat-form-field appearance="outline">
+                <mat-label>Card Number</mat-label>
+                <input matInput id="cardNumber" type="text" formControlName="cardNumber">
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="form-field-66-left">
+                <mat-label>Expiry Date (ex. 09/2025)</mat-label>
+                <input matInput id="expDate" type="text" formControlName="expDate">
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="form-field-66-right">
+                <mat-label>Security Code</mat-label>
+                <input matInput id="securityCode" type="text" formControlName="securityCode">
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Card Holder Name</mat-label>
+                <input matInput id="cardHolderName" type="text" formControlName="cardHolderName">
+            </mat-form-field>
+            <button type="submit" class="submit-btn">{{!editMode ? 'Register':'Update'}}</button>
+            <button type="button" class="submit-btn alt-btn" *ngIf="editMode" (click)="delete()">Delete</button>
+        </form>
+    </div>
+    <div class="loading-container" *ngIf="loading">
+        <mat-spinner [diameter]="200"></mat-spinner>
+    </div>

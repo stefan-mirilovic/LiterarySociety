@@ -40,7 +40,7 @@ export class ChosePaymentComponent implements OnInit {
         this.allPaymentServices = res;
       }
     );*/
-    this.route.queryParams
+    /*this.route.queryParams
       .subscribe(params => {
         console.log(params);
 
@@ -51,7 +51,7 @@ export class ChosePaymentComponent implements OnInit {
         this.order.errorUrl = params.errorUrl;
         console.log(this.order);
       }
-    );
+    );*/
   
     this.merchantService.getPaymentTypes(this.order.merchantId).subscribe({
 			next: (result) => {

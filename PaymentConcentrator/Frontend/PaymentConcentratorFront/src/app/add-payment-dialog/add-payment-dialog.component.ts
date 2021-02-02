@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { CardDetails } from '../model/CardDetails';
 import { MerchantConnect } from '../model/MerchantConnect';
@@ -9,50 +9,33 @@ import { MerchantService } from '../service/merchant.service';
 import { PayService } from '../service/pay-service';
 
 @Component({
-  selector: 'app-add-payment',
-  templateUrl: './add-payment.component.html',
-  styleUrls: ['./add-payment.component.css']
+  selector: 'app-add-payment-dialog',
+  templateUrl: './add-payment-dialog.component.html',
+  styleUrls: ['./add-payment-dialog.component.css']
 })
-export class AddPaymentComponent implements OnInit {
+export class AddPaymentDialogComponent implements OnInit {
   allPaymentServices: PaymentService[];
   paymentMethod: PaymentService = undefined;
   bankForm: any;
   genericForm: any;
-  email: string;
+  editMode: boolean = false;
   loading: boolean = false;
 
   constructor(
-    public router: Router,
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
     private payService: PayService,
-    private merchantService: MerchantService
-  ) { }
+    private merchantService: MerchantService,
+    private dialogRef: MatDialogRef<AddPaymentDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) data
+  ) {
+    if (data.paymentMethod) {
+      this.paymentMethod = data.paymentMethod;
+      this.editMode = true;
+    }
+  }
 
   ngOnInit(): void {
-    this.email = localStorage.getItem("loggedIn");
-    this.payService.discoverAllPaymentType().subscribe(
-      res => {
-        this.allPaymentServices = res;
-        this.merchantService.getPaymentTypes(localStorage.getItem("loggedInMerchantId")).subscribe({
-          next: (result) => {
-            let temp: PaymentService[] = [];
-            for (let p of this.allPaymentServices) {
-              if (result.findIndex(ps => ps.name === p.name) === -1) {
-                temp.push(p);
-              }
-            }
-            this.allPaymentServices = temp;
-          },
-          error: data => {
-            if (data.error && typeof data.error === "string")
-              this.toastr.error(data.error);
-            else
-              this.toastr.error("Error getting payment services!");
-            }
-        });
-      }
-    );
     this.bankForm = this.formBuilder.group({
       cardNumber: new FormControl("", [Validators.required]),
       expDate: new FormControl("", [Validators.required]),
@@ -63,6 +46,30 @@ export class AddPaymentComponent implements OnInit {
       username: new FormControl("", [Validators.required]),
       password: new FormControl(""),
     });
+    this.payService.discoverAllPaymentType().subscribe(
+      res => {
+        this.allPaymentServices = res;
+        if (!this.editMode) {
+          this.merchantService.getPaymentTypes(localStorage.getItem("loggedInMerchantId")).subscribe({
+            next: (result) => {
+              let temp: PaymentService[] = [];
+              for (let p of this.allPaymentServices) {
+                if (result.findIndex(ps => ps.name === p.name) === -1) {
+                  temp.push(p);
+                }
+              }
+              this.allPaymentServices = temp;
+            },
+            error: data => {
+              if (data.error && typeof data.error === "string")
+                this.toastr.error(data.error);
+              else
+                this.toastr.error("Error getting payment services!");
+            }
+          });
+        }
+      }
+    );
   }
 
   onBankSubmit() {
@@ -71,7 +78,7 @@ export class AddPaymentComponent implements OnInit {
     this.merchantService.addPaymentTypeBank(localStorage.getItem("loggedInMerchantId"), cardDetails).subscribe({
 			next: () => {
         this.toastr.success("Added payment method!");
-        this.router.navigate(['/dashboard']);
+        this.dialogRef.close();
 			},
 			error: data => {
 				if (data.error && typeof data.error === "string")
@@ -87,21 +94,30 @@ export class AddPaymentComponent implements OnInit {
     this.merchantService.addPaymentType(localStorage.getItem("loggedInMerchantId"), temp).subscribe({
 			next: () => {
         this.toastr.success("Added payment method!");
-        this.router.navigate(['/dashboard']);
-			},
+        this.dialogRef.close();
+      },
 			error: data => {
 				if (data.error && typeof data.error === "string")
 				  this.toastr.error(data.error);
 				else
-				  this.toastr.error("Failed to load payment methods!");
+				  this.toastr.error("Failed to add payment method!");
 			  }
 		});
   }
 
-  logOut() {
-    localStorage.removeItem("loggedIn");
-    localStorage.removeItem("loggedInMerchantId")
-    this.router.navigate(['/login']);		
+  delete() {
+    this.merchantService.deletePaymentType(localStorage.getItem("loggedInMerchantId"), this.paymentMethod.id, null).subscribe({
+			next: () => {
+        this.toastr.success("Deleted payment method!");
+        this.dialogRef.close();
+      },
+			error: data => {
+				if (data.error && typeof data.error === "string")
+				  this.toastr.error(data.error);
+				else
+				  this.toastr.error("Failed to delete payment method!");
+			  }
+		});
   }
 
 }

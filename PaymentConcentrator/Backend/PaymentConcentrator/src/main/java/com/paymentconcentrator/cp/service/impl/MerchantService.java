@@ -76,9 +76,14 @@ public class MerchantService {
                 .target(BankClient.class, dto.getUrl() + "/api/accounts/merchant-connect");
         bankClient.forwardMerchantToBank(merchantBankConnectRequestDTO);
 
-        merchant.getPayments().add(paymentType);
-        merchantRepository.save(merchant);
-        logger.info("Merchant ID: "+merchant.getId()+" has been connected to bank at "+dto.getUrl());
+        if (!merchant.getPayments().contains(paymentType)) {
+            merchant.getPayments().add(paymentType);
+            merchantRepository.save(merchant);
+            logger.info("Merchant ID: "+merchant.getId()+" has been connected to bank at "+dto.getUrl());
+        } else {
+            logger.info("Merchant ID: "+merchant.getId()+" connection to bank at "+dto.getUrl()+" has been updated");
+        }
+
         return paymentTypeMapper.toDTO(paymentType);
     }
 
@@ -100,9 +105,22 @@ public class MerchantService {
                 .target(GenericPaymentClient.class, dto.getUrl() + "/api/pay/merchant-connect");
         bankClient.forwardMerchant(merchantDTO);
 
-        merchant.getPayments().add(paymentType);
+        if (!merchant.getPayments().contains(paymentType)) {
+            merchant.getPayments().add(paymentType);
+            merchantRepository.save(merchant);
+            logger.info("Merchant ID: " + merchant.getId() + " has been connected to payment service at " + dto.getUrl());
+        } else {
+            logger.info("Merchant ID: " + merchant.getId() + " connection to payment service at " + dto.getUrl() +" has been updated");
+        }
+        return paymentTypeMapper.toDTO(paymentType);
+    }
+
+    public PaymentDto deletePaymentTypeBank(String merchantId, Long id) {
+        Merchant merchant = merchantRepository.findByMerchantId(UUID.fromString(merchantId));
+        PaymentType paymentType = new PaymentType();
+        paymentType.setId(id);
+        merchant.getPayments().remove(paymentType);
         merchantRepository.save(merchant);
-        logger.info("Merchant ID: "+merchant.getId()+" has been connected to payment service at "+dto.getUrl());
         return paymentTypeMapper.toDTO(paymentType);
     }
 }

@@ -17,6 +17,7 @@ import { MerchantPageComponent } from './merchant-page/merchant-page.component';
 import { AddPaymentComponent } from './add-payment/add-payment.component';
 import { ChooseSubscriptionComponent } from './choose-subscription/choose-subscription.component';
 import { MaterialModule } from './material-module';
+import { AddPaymentDialogComponent } from './add-payment-dialog/add-payment-dialog.component';
 
 
 @NgModule({
@@ -30,7 +31,8 @@ import { MaterialModule } from './material-module';
     ChosePaymentComponent,
     MerchantPageComponent,
     AddPaymentComponent,
-    ChooseSubscriptionComponent
+    ChooseSubscriptionComponent,
+    AddPaymentDialogComponent
   ],
   imports: [
     FormsModule,

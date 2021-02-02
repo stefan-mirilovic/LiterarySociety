@@ -6,10 +6,12 @@ import com.paymentconcentrator.paypal.dto.PayPalRequestDto;
 import com.paymentconcentrator.paypal.dto.PayPalResultDto;
 import com.paymentconcentrator.paypal.dto.SubscriptionRequestDTO;
 import com.paymentconcentrator.paypal.enumeration.SubscriptionStatus;
+import com.paymentconcentrator.paypal.enumeration.TransactionStatus;
 import com.paymentconcentrator.paypal.model.Account;
 import com.paymentconcentrator.paypal.model.Subscription;
 import com.paymentconcentrator.paypal.repository.AccountRepository;
 import com.paymentconcentrator.paypal.repository.SubscriptionRepository;
+import com.paymentconcentrator.paypal.repository.TransactionRepository;
 import com.paymentconcentrator.paypal.service.PayPalService;
 import com.paypal.api.payments.*;
 import com.paypal.api.payments.Currency;
@@ -17,6 +19,7 @@ import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.OAuthTokenCredential;
 import com.paypal.base.rest.PayPalRESTException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
@@ -34,8 +37,27 @@ public class PayPalServiceImpl implements PayPalService {
 
 	private final AccountRepository accountRepository;
 	private final SubscriptionRepository subscriptionRepository;
+	private final TransactionRepository transactionRepository;
 	private APIContext apiContext;
 	private final PaymentConcentratorClient paymentConcentratorClient;
+
+	@Scheduled(fixedRate = 200000)
+	public void autoCheck() {
+		List<com.paymentconcentrator.paypal.model.Transaction> transactions = transactionRepository.findByStatus(TransactionStatus.IN_PROGRESS);
+		for (com.paymentconcentrator.paypal.model.Transaction t: transactions) {
+			if (t.getTimestamp().isBefore(LocalDateTime.now().minusMinutes(20))) {
+				t.setStatus(TransactionStatus.CANCELLED);
+				transactionRepository.save(t);
+			}
+		}
+		List<Subscription> subscriptions = subscriptionRepository.findByStatus(SubscriptionStatus.CREATED);
+		for (Subscription s: subscriptions) {
+			if (s.getTimestamp().isBefore(LocalDateTime.now().minusMinutes(20))) {
+				s.setStatus(SubscriptionStatus.CANCELLED);
+				subscriptionRepository.save(s);
+			}
+		}
+	}
 
 	@Override
 	public Payment redirectUrl(PayPalRequestDto payPalRequestDto) throws PayPalRESTException {
@@ -65,8 +87,8 @@ public class PayPalServiceImpl implements PayPalService {
 		payment.setPayer(payer);
 		payment.setTransactions(transactionList);
 
-		redirectUrls.setCancelUrl(payPalRequestDto.getFailedUrl());
 		String merchantOrderId= String.valueOf(payPalRequestDto.getMerchantOrderId());
+		redirectUrls.setCancelUrl(payPalRequestDto.getFailedUrl());
 		redirectUrls.setReturnUrl("http://localhost:8662/paypal/api/pay/success/"+ merchantOrderId);
 		payment.setRedirectUrls(redirectUrls);
 
@@ -74,6 +96,19 @@ public class PayPalServiceImpl implements PayPalService {
 	 	apiContext = new APIContext(oAuthToken.getAccessToken());
 		apiContext.setConfigurationMap(configMap);
 		Payment paymentCreated=payment.create(apiContext);
+
+		//create transaction in our database
+		com.paymentconcentrator.paypal.model.Transaction myTransaction = new com.paymentconcentrator.paypal.model.Transaction();
+		myTransaction.setPaymentId(paymentCreated.getId());
+		myTransaction.setAmount(payPalRequestDto.getAmount());
+		myTransaction.setMerchantOrderId(payPalRequestDto.getMerchantOrderId());
+		myTransaction.setSeller(account);
+		myTransaction.setStatus(TransactionStatus.IN_PROGRESS);
+		myTransaction.setSuccessUrl(payPalRequestDto.getSuccessUrl());
+		myTransaction.setFailedUrl(payPalRequestDto.getFailedUrl());
+		myTransaction.setErrorUrl(payPalRequestDto.getErrorUrl());
+		myTransaction.setTimestamp(LocalDateTime.now());
+		transactionRepository.save(myTransaction);
 		return paymentCreated;
 	}
 
@@ -89,7 +124,7 @@ public class PayPalServiceImpl implements PayPalService {
 	}
 
 	@Override
-	public PayPalResultDto executePayment(String paymentId, String payerId, Long merchantId) throws PayPalRESTException {
+	public String executePayment(String paymentId, String payerId, Long merchantId) throws PayPalRESTException {
 		Payment payment = new Payment();
 		payment.setId(paymentId);
 		PaymentExecution paymentExecution = new PaymentExecution();
@@ -98,12 +133,30 @@ public class PayPalServiceImpl implements PayPalService {
 		PayPalResultDto payPalResultDto = new PayPalResultDto();
 		payPalResultDto.setMerchantOrderId(merchantId);
 		payPalResultDto.setPaymentMethod("paypal");
-		return payPalResultDto;
+		paymentConcentratorClient.sendResult(payPalResultDto);
+
+		//update transaction in our database
+		com.paymentconcentrator.paypal.model.Transaction transaction = transactionRepository.findByPaymentId(paymentId);
+		transaction.setStatus(TransactionStatus.COMPLETED);
+		transactionRepository.save(transaction);
+
+		return transaction.getSuccessUrl();
+	}
+
+	@Override
+	public String cancelPayment(String paymentId, String payerId, Long merchantOrder) {
+		com.paymentconcentrator.paypal.model.Transaction transaction = transactionRepository.findByPaymentId(paymentId);
+		transaction.setStatus(TransactionStatus.CANCELLED);
+		transactionRepository.save(transaction);
+		return transaction.getFailedUrl();
 	}
 
 	@Override
 	public MerchantConnectRequestDTO connectMerchant(MerchantConnectRequestDTO dto) {
-		Account account = new Account();
+		Account account = accountRepository.findByMerchantId(dto.getMerchantId());
+		if (account == null) {
+			account = new Account();
+		}
 		account.setClientId(dto.getUsername());
 		account.setClientSecret(dto.getPassword());
 		account.setMerchantId(dto.getMerchantId());
@@ -118,8 +171,6 @@ public class PayPalServiceImpl implements PayPalService {
 		OAuthTokenCredential oAuthToken = new OAuthTokenCredential(account.getClientId(), account.getClientSecret(), configMap);
 		apiContext = new APIContext(oAuthToken.getAccessToken());
 		apiContext.setConfigurationMap(configMap);
-		/*Plan plan = createPlan(dto);
-		Plan createdPlan = plan.create(apiContext);*/
 		Plan plan = new Plan();
 		plan.setName("Literary Society Membership Plan");
 		plan.setDescription("Template creation.");
@@ -128,10 +179,9 @@ public class PayPalServiceImpl implements PayPalService {
 		PaymentDefinition paymentDefinition = new PaymentDefinition();
 
 		Double total = BigDecimal.valueOf(request.getAmount()).setScale(2, RoundingMode.HALF_UP).doubleValue();
-		//amount.setTotal(String.format("%.2f", total));
 		Currency amount = new Currency("USD", String.valueOf(total));
 
-		paymentDefinition.setChargeModels(List.of(new ChargeModels("TAX", amount)));
+		paymentDefinition.setChargeModels(List.of(new ChargeModels("SHIPPING", amount)));
 		paymentDefinition.setName("Regular Payments");
 		paymentDefinition.setType("REGULAR");
 		paymentDefinition.setAmount(amount);
@@ -166,13 +216,11 @@ public class PayPalServiceImpl implements PayPalService {
 		}
 
 		// Create new agreement
-		//Agreement agreement = createAgreement(plan.getId());
 		Agreement agreement = new Agreement();
 		agreement.setName("Literary Society Membership Agreement");
 		agreement.setDescription("Starting new subscription agreement");
 		agreement.setStartDate(generateTomorrowDateTime());
 
-		//agreement.setPlan(createdPlan);
 		Plan plan1 = new Plan();
 		plan1.setId(createdPlan.getId());
 		agreement.setPlan(plan1);
@@ -180,8 +228,6 @@ public class PayPalServiceImpl implements PayPalService {
 		Payer payer = new Payer();
 		payer.setPaymentMethod("paypal");
 		agreement.setPayer(payer);
-		//agreement.setPlan(plan);
-		//agreement = agreement.create(apiContext);
 		String retVal = null;
 		agreement = agreement.create(apiContext);
 

@@ -1,6 +1,6 @@
 package com.paymentconcentrator.paypal.model;
 
-import com.paymentconcentrator.paypal.enumeration.SubscriptionStatus;
+import com.paymentconcentrator.paypal.enumeration.TransactionStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,14 +13,14 @@ import java.time.LocalDateTime;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class Subscription {
+public class Transaction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @Column(unique = true)
-    private String agreementToken;
+    private String paymentId;
 
     @Column
     private Double amount;
@@ -40,19 +40,10 @@ public class Subscription {
     @Column
     private String errorUrl;
 
-    @Column
-    private String frequency;
-
-    @Column
-    private String interval;
-
-    @Column
-    private Integer cycles;
-
     @ManyToOne
     private Account seller;
 
     @Column
     @Enumerated(EnumType.STRING)
-    private SubscriptionStatus status;
+    private TransactionStatus status;
 }

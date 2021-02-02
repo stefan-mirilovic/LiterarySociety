@@ -34,4 +34,8 @@ export class MerchantService {
     return this.http.post<PaymentService>(`${environment.baseUrl}/merchants/${id}/payment-types`, data);
   }
 
+  public deletePaymentType(merchantId: string, id: number, data: MerchantConnect): Observable<PaymentService> {
+    return this.http.delete<PaymentService>(`${environment.baseUrl}/merchants/${merchantId}/payment-types/${id}`);
+  }
+
 }

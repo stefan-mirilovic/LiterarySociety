@@ -1,7 +1,53 @@
-<p>Logged in as <b>{{this.email}}</b></p><button (click)="logOut()">Log Out</button>
-<h3>Payment methods</h3>
+<body>
+    <nav class="navbar navbar-default navbar-dark navbar-fixed-top" id="main-navbar">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand">
+                    Payment Concentrator
+                </a>
+            </div>
+            <div class="nav navbar-right">
+                <span class="navbar-text logged-in-navbar">
+                    Logged in as <b>{{this.email}}</b>
+                </span>
+                <button class="logout-btn-navbar" (click)="logOut()">Log Out</button>
+            </div>
+        </div>
+
+    </nav>
+    <div class="row ">
+        <div class="col-lg-4 col-md-3">
+        </div>
+        <div class="col-lg-4 col-md-6 col-12 middle-container">
+            <h1 class="title">Your Payment Methods</h1>
+            <h6 class="subtitle">
+                here you can configure the payment methods you wish to support
+            </h6>
+            <hr class="sidebar-divider">
+            <div class="row service-container">
+                <div class="col-12 ">
+                    <p *ngIf="!paymentTypes || paymentTypes.length === 0">You have no payment methods!</p>
+                </div>
+                <div class="col-12 " *ngFor="let pt of paymentTypes">
+                    <!--<ul>
+                    <li *ngFor="let pt of paymentTypes">{{pt.name.toUpperCase()}}</li>
+                </ul>-->
+                    <button class="service-btn" (click)="openDialog(pt)"
+                        [matTooltip]="'Edit ' + pt.name.toUpperCase()" matTooltipPosition="right"
+                        matTooltipShowDelay="1000">
+                        {{pt.name.toUpperCase()}}
+                    </button>
+                </div>
+                <button class="service-btn add-btn" (click)="openDialog(undefined)">Add...</button>
+            </div>
+        </div>
+    </div>
+    <div class="loading-container" *ngIf="loading">
+        <mat-spinner [diameter]="200"></mat-spinner>
+    </div>
+    <!--<h3>Payment methods</h3>
 <ul>
     <li *ngFor="let pt of paymentTypes">{{pt.name}}</li>
 </ul>
-<p *ngIf="!paymentTypes || paymentTypes.length === 0">You have no payment methods!</p>
-<button (click)="router.navigate(['add-payment'])">Add...</button>
+<button (click)="router.navigate(['add-payment'])">Add...</button>-->
+</body>
