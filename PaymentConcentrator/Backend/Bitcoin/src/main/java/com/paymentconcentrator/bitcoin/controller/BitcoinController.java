@@ -10,10 +10,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
+@CrossOrigin
 @RestController()
 @RequiredArgsConstructor
 @RequestMapping("/api/pay")
-@CrossOrigin(origins = "http://localhost:4200")
 public class BitcoinController {
 
 	private final static String GET_SUCCESS = "/paymentSuccessful/{id}";
@@ -26,13 +26,16 @@ public class BitcoinController {
 		return paymentService.sendOrder(concentratorRequest);
 	}
 
-	@GetMapping(GET_SUCCESS)
+	@GetMapping("/"+PaymentConstants.Url.SUCCESS_URL+"{id}")
 	public RedirectView getPaymentSuccess(@PathVariable("id") Long paymentId){
-		BitcoinResultDto bitcoinResultDto = new BitcoinResultDto();
-		bitcoinResultDto.setMerchantOrderId(paymentId);
-		bitcoinResultDto.setPaymentMethod(PaymentConstants.Info.PAYMENT_METHOD);
-		paymentConcentratorClient.sendResult(bitcoinResultDto);
-		return new RedirectView("https://screenmessage.com/hxqx");
+		String successUrl = paymentService.finishTransaction(paymentId);
+		return new RedirectView(successUrl);
+	}
+
+	@GetMapping("/"+PaymentConstants.Url.CANCEL_URL+"{id}")
+	public RedirectView getPaymentCancel(@PathVariable("id") Long paymentId){
+		String url = paymentService.cancelTransaction(paymentId);
+		return new RedirectView(url);
 	}
 
 	@PostMapping(value = "/merchant-connect")
