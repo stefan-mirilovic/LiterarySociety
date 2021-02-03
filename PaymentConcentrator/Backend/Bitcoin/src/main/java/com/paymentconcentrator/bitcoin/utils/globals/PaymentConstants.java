@@ -7,8 +7,9 @@ public abstract class PaymentConstants {
 		public static final String API_ORDERS = "https://api-sandbox.coingate.com/v2/orders";
 	}
 	public static class Url {
-		public static final String SUCCESS_URL = HOST + "paymentSuccessful/";
-		public static final String CANCEL_URL = HOST + "paymentCanceled/";
+		public static final String HOST = "http://localhost:8084/api/pay/";
+		public static final String SUCCESS_URL = "payment-successful/";
+		public static final String CANCEL_URL = "payment-cancelled/";
 		public static final String REDIRECT_SUCCESS = "success <p><a href=\"http://localhost:4200/chose/payment\">Back to home</a></p>";
 	}
 

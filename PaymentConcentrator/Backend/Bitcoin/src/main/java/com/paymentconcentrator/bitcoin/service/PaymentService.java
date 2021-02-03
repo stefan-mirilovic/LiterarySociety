@@ -16,4 +16,8 @@ public interface PaymentService{
 
 
     MerchantConnectRequestDTO connectMerchant(MerchantConnectRequestDTO dto);
+
+	String finishTransaction(Long paymentId);
+
+	String cancelTransaction(Long paymentId);
 }
