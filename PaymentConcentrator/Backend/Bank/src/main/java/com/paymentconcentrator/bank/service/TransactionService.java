@@ -76,7 +76,7 @@ public class TransactionService {
                     TransactionStatus.IN_PROGRESS, acquirer, dto.getSuccessUrl(), dto.getFailedUrl(), dto.getErrorUrl(), dto.getMerchantOrderId());
             transactionRepository.save(transaction);
             response.setRedirectLink(frontendUrl + "/purchase/" + paymentId);
-            logger.info("Transaction created (id" + transaction.getId() + ", paymentId: " + paymentId + "). DTO: " + dto.toString());
+            logger.info("Transaction created (id: " + transaction.getId() + ", paymentId: " + paymentId + "). DTO: " + dto.toString());
             return frontendUrl + "/purchase/" + paymentId;
         } catch (Exception e) {
             response.setRedirectLink(dto.getErrorUrl());

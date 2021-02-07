@@ -36,11 +36,6 @@ export class ChosePaymentComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    /*this.payService.discoverAllPaymentType().subscribe(
-      res => {
-        this.allPaymentServices = res;
-      }
-    );*/
     this.route.queryParams
       .subscribe(params => {
         console.log(params);
@@ -57,7 +52,20 @@ export class ChosePaymentComponent implements OnInit {
   
     this.merchantService.getPaymentTypes(this.order.merchantId).subscribe({
 			next: (result) => {
-        this.allPaymentServices = result;
+        let myPaymentMethods: PaymentService[] = [];
+        this.payService.discoverAllPaymentType().subscribe(
+          res => {
+            for (let r1 of res) {
+              for (let r2 of result) {
+                if (r1.name === r2.name) {
+                  myPaymentMethods.push(r2);
+                  break;
+                }
+              }
+            }
+          }
+        );
+        this.allPaymentServices = myPaymentMethods;
 			},
 			error: data => {
 				if (data.error && typeof data.error === "string")
