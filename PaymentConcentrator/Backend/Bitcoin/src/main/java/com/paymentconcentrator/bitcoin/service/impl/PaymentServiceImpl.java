@@ -11,6 +11,8 @@ import com.paymentconcentrator.bitcoin.utils.PaymentUtils;
 import com.paymentconcentrator.bitcoin.utils.dto.*;
 import com.paymentconcentrator.bitcoin.utils.globals.PaymentConstants;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -26,16 +28,20 @@ public class PaymentServiceImpl implements PaymentService {
 	private final AccountRepository accountRepository;
 	private final TransactionRepository transactionRepository;
 	private final PaymentConcentratorClient paymentConcentratorClient;
+	private static final Logger logger = LoggerFactory.getLogger(PaymentServiceImpl.class);
 
 	@Scheduled(fixedRate = 200000)
 	public void autoCheck() {
+		logger.info("Transaction check starting...");
 		List<Transaction> transactions = transactionRepository.findAllByStatus(TransactionStatus.IN_PROGRESS);
 		for (Transaction t: transactions) {
 			if (t.getTimestamp().isBefore(LocalDateTime.now().minusMinutes(20))) {
 				t.setStatus(TransactionStatus.CANCELLED);
 				transactionRepository.save(t);
+				logger.info("Transaction cancelled for taking too long to complete. ID: "+t.getId());
 			}
 		}
+		logger.info("Transaction check finished");
 	}
 
 	@Override
@@ -57,7 +63,8 @@ public class PaymentServiceImpl implements PaymentService {
 		account = new Account();
 		account.setToken(dto.getUsername());
 		account.setMerchantId(dto.getMerchantId());
-		accountRepository.save(account);
+		account = accountRepository.save(account);
+		logger.info("Account ID: "+account.getId()+" has been connected to payment concentrator and made a merchant");
 		return dto;
 	}
 
@@ -84,7 +91,8 @@ public class PaymentServiceImpl implements PaymentService {
 		transaction.setSuccessUrl(request.getSuccessUrl());
 		transaction.setFailedUrl(request.getFailedUrl());
 		transaction.setErrorUrl(request.getErrorUrl());
-		transactionRepository.save(transaction);
+		transaction = transactionRepository.save(transaction);
+		logger.info("Transaction created (id: " + transaction.getId() + ", merchantOrderId: " + request.getMerchantOrderId() + "). Redirecting client to Bitcoin API.");
 
 		return paymentDto;
 	}
@@ -99,6 +107,7 @@ public class PaymentServiceImpl implements PaymentService {
 		Transaction transaction = transactionRepository.findByMerchantOrderId(paymentId);
 		transaction.setStatus(TransactionStatus.COMPLETED);
 		transactionRepository.save(transaction);
+		logger.info("Transaction completed (id: " + transaction.getId() + ", merchantOrderId: " + paymentId + ").");
 		return transaction.getSuccessUrl();
 	}
 
@@ -107,6 +116,7 @@ public class PaymentServiceImpl implements PaymentService {
 		Transaction transaction = transactionRepository.findByMerchantOrderId(paymentId);
 		transaction.setStatus(TransactionStatus.CANCELLED);
 		transactionRepository.save(transaction);
+		logger.info("Transaction cancelled (id: " + transaction.getId() + ", merchantOrderId: " + paymentId + ").");
 		return transaction.getFailedUrl();
 	}
 }

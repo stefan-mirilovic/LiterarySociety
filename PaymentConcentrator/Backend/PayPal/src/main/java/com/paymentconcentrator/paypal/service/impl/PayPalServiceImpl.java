@@ -19,6 +19,8 @@ import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.OAuthTokenCredential;
 import com.paypal.base.rest.PayPalRESTException;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -40,23 +42,31 @@ public class PayPalServiceImpl implements PayPalService {
 	private final TransactionRepository transactionRepository;
 	private APIContext apiContext;
 	private final PaymentConcentratorClient paymentConcentratorClient;
+	private static final Logger logger = LoggerFactory.getLogger(PayPalServiceImpl.class);
 
 	@Scheduled(fixedRate = 200000)
 	public void autoCheck() {
+		logger.info("Transaction check starting...");
 		List<com.paymentconcentrator.paypal.model.Transaction> transactions = transactionRepository.findByStatus(TransactionStatus.IN_PROGRESS);
 		for (com.paymentconcentrator.paypal.model.Transaction t: transactions) {
 			if (t.getTimestamp().isBefore(LocalDateTime.now().minusMinutes(20))) {
 				t.setStatus(TransactionStatus.CANCELLED);
 				transactionRepository.save(t);
+				logger.info("Transaction cancelled for taking too long to complete. ID: "+t.getId());
 			}
 		}
+		logger.info("Transaction check finished");
+		logger.info("Subscription check starting...");
 		List<Subscription> subscriptions = subscriptionRepository.findByStatus(SubscriptionStatus.CREATED);
 		for (Subscription s: subscriptions) {
 			if (s.getTimestamp().isBefore(LocalDateTime.now().minusMinutes(20))) {
 				s.setStatus(SubscriptionStatus.CANCELLED);
 				subscriptionRepository.save(s);
+				logger.info("Subscription cancelled for taking too long to complete. ID: "+s.getId());
 			}
 		}
+		logger.info("Subscription check finished");
+
 	}
 
 	@Override
@@ -108,7 +118,8 @@ public class PayPalServiceImpl implements PayPalService {
 		myTransaction.setFailedUrl(payPalRequestDto.getFailedUrl());
 		myTransaction.setErrorUrl(payPalRequestDto.getErrorUrl());
 		myTransaction.setTimestamp(LocalDateTime.now());
-		transactionRepository.save(myTransaction);
+		myTransaction = transactionRepository.save(myTransaction);
+		logger.info("Transaction created (id: " + myTransaction.getId() + ", merchantOrderId: " + payPalRequestDto.getMerchantOrderId() + "). Redirecting client to PayPal API.");
 		return paymentCreated;
 	}
 
@@ -139,6 +150,7 @@ public class PayPalServiceImpl implements PayPalService {
 		com.paymentconcentrator.paypal.model.Transaction transaction = transactionRepository.findByPaymentId(paymentId);
 		transaction.setStatus(TransactionStatus.COMPLETED);
 		transactionRepository.save(transaction);
+		logger.info("Transaction completed (id: " + transaction.getId() + ", merchantOrderId: " + transaction.getMerchantOrderId() + ").");
 
 		return transaction.getSuccessUrl();
 	}
@@ -148,6 +160,7 @@ public class PayPalServiceImpl implements PayPalService {
 		com.paymentconcentrator.paypal.model.Transaction transaction = transactionRepository.findByPaymentId(paymentId);
 		transaction.setStatus(TransactionStatus.CANCELLED);
 		transactionRepository.save(transaction);
+		logger.info("Transaction cancelled (id: " + transaction.getId() + ", merchantOrderId: " + transaction.getMerchantOrderId() + ").");
 		return transaction.getFailedUrl();
 	}
 
@@ -161,6 +174,7 @@ public class PayPalServiceImpl implements PayPalService {
 		account.setClientSecret(dto.getPassword());
 		account.setMerchantId(dto.getMerchantId());
 		accountRepository.save(account);
+		logger.info("Account ID: "+account.getId()+" has been connected to payment concentrator and made a merchant");
 		return dto;
 	}
 
@@ -245,7 +259,7 @@ public class PayPalServiceImpl implements PayPalService {
 		subscription.setFailedUrl(request.getFailedUrl());
 		subscription.setErrorUrl(request.getErrorUrl());
 		subscription.setTimestamp(LocalDateTime.now());
-		subscriptionRepository.save(subscription);
+		subscription = subscriptionRepository.save(subscription);
 
 		for (Links links : agreement.getLinks()) {
 			if ("approval_url".equals(links.getRel())) {
@@ -257,6 +271,7 @@ public class PayPalServiceImpl implements PayPalService {
 				break;
 			}
 		}
+		logger.info("Subscription created (id: " + subscription.getId() + ", merchantOrderId: " + subscription.getMerchantOrderId() + "). Redirecting client to PayPal API.");
 
 		return retVal;
 	}
@@ -309,6 +324,7 @@ public class PayPalServiceImpl implements PayPalService {
 		Subscription subscription = subscriptionRepository.findByAgreementToken(token);
 		subscription.setStatus(SubscriptionStatus.ACTIVE);
 		subscriptionRepository.save(subscription);
+		logger.info("Subscription activated (id: " + subscription.getId() + ", merchantOrderId: " + subscription.getMerchantOrderId() + ").");
 		return subscription.getSuccessUrl();
 	}
 
@@ -317,6 +333,7 @@ public class PayPalServiceImpl implements PayPalService {
 		Subscription subscription = subscriptionRepository.findByAgreementToken(token);
 		subscription.setStatus(SubscriptionStatus.CANCELLED);
 		subscriptionRepository.save(subscription);
+		logger.info("Subscription cancelled (id: " + subscription.getId() + ", merchantOrderId: " + subscription.getMerchantOrderId() + ").");
 		return subscription.getFailedUrl();
 	}
 }

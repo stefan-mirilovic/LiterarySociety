@@ -46,7 +46,7 @@ export class ChooseSubscriptionComponent implements OnInit {
           this.order.failedUrl = params.failedUrl;
           this.order.errorUrl = params.errorUrl;
           this.order.frequency = params.frequency;
-          this.order.cycles = params.cycls;
+          this.order.cycles = params.cycles;
           this.order.interval = params.interval;
           console.log(this.order);
         }
